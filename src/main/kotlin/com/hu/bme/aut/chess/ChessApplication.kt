@@ -1,5 +1,8 @@
 package com.hu.bme.aut.chess
 
+import com.hu.bme.aut.chess.repository.match.MatchService
+import com.hu.bme.aut.chess.repository.user.UserService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.http.ResponseEntity

@@ -1,35 +1,65 @@
 package com.hu.bme.aut.chess.controller.user
 
 import com.hu.bme.aut.chess.domain.ChessUser
-import com.hu.bme.aut.chess.repository.user.UserRepository
+import com.hu.bme.aut.chess.domain.Match
+import com.hu.bme.aut.chess.repository.match.MatchService
+import com.hu.bme.aut.chess.repository.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
 @RequestMapping("/api/users")
-class UserController @Autowired constructor( private final val userService: UserService){
+class UserController @Autowired constructor(
+    private val userService: UserService,
+    private val matchService: MatchService
+    ){
+
+
+
 
     @GetMapping
     fun getAllUser(): ResponseEntity<List<ChessUser>> {
         val useres = userService.findAll()
-        if(useres.isNullOrEmpty()) {
-            return ResponseEntity.notFound().build()
+        return if(useres == null) {
+            ResponseEntity.notFound().build()
         } else {
-            return ResponseEntity.ok(useres)
+            ResponseEntity.ok(useres)
         }
     }
 
+    @GetMapping("/id/{id}")
+    fun getById(@PathVariable id: Long): ResponseEntity<ChessUser> {
+        val chessUser: ChessUser? = userService.getUserByID(id)
+        return if (chessUser == null) {
+            ResponseEntity.notFound().build()
+        } else {
+            ResponseEntity.ok(chessUser)
+        }
+    }
+
+    @GetMapping("/match/{id}")
+    fun getMatch(@PathVariable id: Long): ResponseEntity<Match> {
+        val match: Match? = matchService.getUserByID(id)
+        return if (match == null) {
+            ResponseEntity.notFound().build()
+        } else {
+            ResponseEntity.ok(match)
+        }
+    }
+
+
     @PostMapping
-    fun addUser(){
+    fun addUser(): ResponseEntity<ChessUser>{
         val user = ChessUser("János")
         val user2 = ChessUser("másik János")
+
+        val match = Match(playerOne = user, playerTwo = user2, board = "RKQKR" )
         userService.save(user)
         userService.save(user2)
+
+        matchService.save(match)
+        return ResponseEntity.ok(user2)
     }
 }
