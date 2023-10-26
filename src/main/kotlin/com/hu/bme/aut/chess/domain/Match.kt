@@ -1,7 +1,7 @@
 package com.hu.bme.aut.chess.domain
 
 import jakarta.persistence.*
-
+/*
 @Entity
 data class Match(
     @Id
@@ -18,3 +18,5 @@ data class Match(
 
     var board: String
 )
+
+ */
