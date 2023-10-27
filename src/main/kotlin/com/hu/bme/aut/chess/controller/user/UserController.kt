@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-
 @RestController
 @RequestMapping("/api/users")
 class UserController @Autowired constructor(
     private val userService: UserService,
     private val matchService: MatchService
     ){
-
-
-
-
     @GetMapping
     fun getAllUser(): ResponseEntity<List<ChessUser>> {
         val useres = userService.findAll()
@@ -49,7 +44,6 @@ class UserController @Autowired constructor(
         }
     }
 
-
     @PostMapping
     fun addUser(): ResponseEntity<ChessUser>{
         val user = ChessUser("János")
@@ -61,5 +55,11 @@ class UserController @Autowired constructor(
 
         matchService.save(match)
         return ResponseEntity.ok(user2)
+    }
+
+    @PostMapping("/addUser")
+    fun addUser(@RequestBody user: ChessUser): ResponseEntity<ChessUser> {
+        val chessUser: ChessUser = userService.save(user)
+        return ResponseEntity.ok(chessUser)
     }
 }

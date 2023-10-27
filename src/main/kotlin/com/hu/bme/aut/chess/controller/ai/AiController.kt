@@ -9,14 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/chess/ai")
+@RequestMapping("api/chess/ai")
 class AiController {
 
     @GetMapping("/{fen}")
     fun getAiStep(@PathVariable fen: String): ResponseEntity<String>{
-        val board = Board(fenBoard= "rnbqkbnr/pppp1ppp/4p3/8/8/4P3/PPPP1PPP/RNBQKBNRK w KQkq")
+        val validFen = fenRequestToString(fen)
+        println(validFen)
+        val board = Board(validFen)
         board.doAiStep(PieceColor.WHITE)
         return ResponseEntity.ok("Next Step: ${board.createFEN()}\nprevious step: $fen")
         TODO("Implement ai")
+    }
+
+    fun fenRequestToString(fenReq: String): String {
+        return fenReq.replace('.','/').replace("_", " ")
     }
 }
