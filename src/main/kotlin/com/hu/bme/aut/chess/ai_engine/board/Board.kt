@@ -43,7 +43,13 @@ class Board(var aiBoard: Boolean= false){
         currentUser = _currentUser
         if (fenBoard.isNotBlank()) {
             val fenParts = fenBoard.split(" ")
-            require(fenParts.size == 3) { "Invalid FEN string: $fenBoard" }
+            //require(fenParts.size == 6) { "Invalid FEN string: $fenBoard" }
+
+            if (fenParts[1] == "w") {
+                currentPlayerBoard = PieceColor.WHITE
+            } else if (fenParts[1] == "b") {
+                currentPlayerBoard = PieceColor.BLACK
+            }
 
             val fenRows = fenParts[0].split("/")
             require(fenRows.size == 8) { "Invalid FEN string: $fenBoard" }
@@ -761,7 +767,9 @@ class Board(var aiBoard: Boolean= false){
                 boardFEN+=" b "
             }
 
+            //boardFEN += " "
             boardFEN += generateCastlingFen(this, true)
+            boardFEN += " - 0 1"
 
             return boardFEN
         }
@@ -808,6 +816,8 @@ class Board(var aiBoard: Boolean= false){
 
             boardFEN = boardFEN.dropLast(1)
 
+
+
             if(currentPlayerBoard == PieceColor.WHITE){
                 boardFEN+=" w "
             }
@@ -815,7 +825,11 @@ class Board(var aiBoard: Boolean= false){
                 boardFEN+=" b "
             }
 
+
+            //boardFEN += " "
             boardFEN += generateCastlingFen(this, false)
+
+            boardFEN += " - 0 1"
 
             return boardFEN
         }

@@ -36,7 +36,7 @@ class UserController @Autowired constructor(
 
     @GetMapping("/match/{id}")
     fun getMatch(@PathVariable id: Long): ResponseEntity<Match> {
-        val match: Match? = matchService.getUserByID(id)
+        val match: Match? = matchService.getMatchByID(id)
         return if (match == null) {
             ResponseEntity.notFound().build()
         } else {
