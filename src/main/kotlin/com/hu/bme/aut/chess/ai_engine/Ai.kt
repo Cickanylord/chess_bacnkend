@@ -168,7 +168,7 @@ class Ai(var board: Board, color: PieceColor) {
                 //init new board
                 val tmp = Board(board.copyBoard(), aiColor.oppositeColor(),true)
                 val tmpPiece = tmp.getPiece(steps[i].first.position)
-                tmp.step(tmpPiece,steps[i].second.first, steps[i].second.second)
+                tmp.step(tmpPiece, steps[i].second.first, steps[i].second.second)
                 //Log.d("MAX", "\n${boardEvaluator(tmp)}\n${tmp.printBoard()}\n")
                 //new board eval
                 val value = minimax(tmp, depth-1, false, alpha, beta)

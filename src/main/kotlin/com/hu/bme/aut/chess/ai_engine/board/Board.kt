@@ -19,7 +19,6 @@ class Board(var aiBoard: Boolean= false){
     var chanceForEnPassant: Boolean = false
     var whiteSide = Side.DOWN
 
-    var playerOne: String? = null
     var playerTwo: String? = null
     var currentUser: String? = null
 
@@ -37,9 +36,7 @@ class Board(var aiBoard: Boolean= false){
         loadBoard(pieces)
     }
 
-    constructor(fenBoard: String = "", _playerOne: String? = null, _playerTwo: String? = null, _currentUser: String? = null) : this() {
-        playerOne = _playerOne
-        playerTwo = _playerTwo
+    constructor(fenBoard: String = "", _currentUser: String? = null) : this() {
         currentUser = _currentUser
         if (fenBoard.isNotBlank()) {
             val fenParts = fenBoard.split(" ")
@@ -79,7 +76,7 @@ class Board(var aiBoard: Boolean= false){
                     } else {
                         val pieceColor = if (char.isUpperCase()) PieceColor.WHITE else PieceColor.BLACK
                         val piece = getPieceFromFENChar(
-                            char.toLowerCase(),
+                            char.lowercaseChar(),
                             pieceColor,
                             i,
                             j,
@@ -108,7 +105,7 @@ class Board(var aiBoard: Boolean= false){
 
         if(fenBoard == ""){
             currentPlayerBoard = PieceColor.WHITE
-            val tiles = mutableListOf<MutableList<Tile>>()
+            mutableListOf<MutableList<Tile>>()
             for (i in 0 until 8) {
                 val rowList = mutableListOf<Tile>()
 
@@ -218,7 +215,7 @@ class Board(var aiBoard: Boolean= false){
 
             // Castling
             if (runspec) {
-                checkAvailableStepsforCheck(piece, piece.pieceColor, final)
+                checkAvailableStepsforCheck(piece, final)
                 if (!aiBoard && piece.name == PieceName.KING && !piece.hasMoved) {
                     GetValidCastling(piece, final)
                 }
@@ -250,7 +247,6 @@ class Board(var aiBoard: Boolean= false){
 
     fun checkAvailableStepsforCheck(
         piece: Piece,
-        color: PieceColor,
         final: MutableList<Pair<Int, Int>>
     ) {
         val invalids = mutableListOf<Pair<Int, Int>>()
@@ -406,7 +402,7 @@ class Board(var aiBoard: Boolean= false){
 
     //////////////////////////////////////////////////////////////////////////////
     //  Different steps and step logic
-    fun step(piece: Piece, i: Int, j: Int, doai: Boolean = true) {
+    fun step(piece: Piece, i: Int, j: Int) {
         if (piece.name == PieceName.KING && !piece.hasMoved) {
             CastlingStep(piece, i, j)
         }
@@ -599,7 +595,7 @@ class Board(var aiBoard: Boolean= false){
         //////////////////////////////////////////////////////////////////////////////
 // setters for pieces or bord information
     fun addPiece(piece: Piece) {
-        var rowlist = board.get(piece.i)
+        val rowlist = board.get(piece.i)
         rowlist[piece.j] = Tile(false, piece)
     }
 
@@ -717,6 +713,7 @@ class Board(var aiBoard: Boolean= false){
         var boardFEN = ""
 
         val flipBoard = (this.whiteSide == Side.UP)
+
 
         if(flipBoard){
             board.reversed().forEach { row ->
@@ -854,12 +851,12 @@ class Board(var aiBoard: Boolean= false){
 
 
         for (i in 0 until 8) {
-            val newRowList = tiles?.get(i)
+            val newRowList = tiles.get(i)
             for (j in 0 until 8) {
                 var add = false
                 listOfPieces.forEach() {
                     if (it.position == Pair(i, j)) {
-                        newRowList?.set(j, Tile(false, it))
+                        newRowList.set(j, Tile(false, it))
                         //Log.d("FLIP", "name:${it.name} position:${it.position.toString()} color:${it.pieceColor} ")
                         add = true
                     }

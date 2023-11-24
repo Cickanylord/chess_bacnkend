@@ -6,6 +6,7 @@ import com.hu.bme.aut.chess.repository.user.UserService
 import hu.bme.aut.android.monkeychess.board.Board
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,6 +18,11 @@ class MatchController @Autowired constructor(
     private val userService: UserService,
     private val matchService: MatchService
 ){
+    @GetMapping
+    fun getMatches(): ResponseEntity<List<Match?>> {
+        return  ResponseEntity.ok(matchService.getMatches())
+    }
+
     @PostMapping("/addMatch")
     fun addMatch(@RequestBody match: MatchRequest): ResponseEntity<Match> {
         if(match.playerOne != match.playerTwo) {
@@ -36,6 +42,9 @@ class MatchController @Autowired constructor(
     fun Step(@RequestBody step: StepRequest): ResponseEntity<Match> {
         val  match = matchService.getMatchByID(step.match_id)
 
+        if (match == null || match.board != step.prevBoard) {
+            return ResponseEntity.notFound().build()
+        }
         val board = Board(fenBoard = step.prevBoard)
         var valid = false
 
@@ -44,7 +53,7 @@ class MatchController @Autowired constructor(
             board.getAvailableSteps(piece, piece.pieceColor, true ).forEach {
                 val tmpBoard = Board(fenBoard = step.prevBoard)
                 val tmpPiece = tmpBoard.getPiece(piece.i, piece.j)
-                tmpBoard.step(tmpPiece, it.first, it.second, false)
+                tmpBoard.step(tmpPiece, it.first, it.second)
                 println(tmpBoard.createFEN())
                 if (step.board.equals(tmpBoard.createFEN())) {
                     valid = true
@@ -52,8 +61,10 @@ class MatchController @Autowired constructor(
             }
         }
 
-        if(valid){
-         println("valid: ${step.board}")
+        if (valid) {
+            println("valid: ${step.board}")
+            match.board = step.board
+            matchService.save(match)
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.notFound().build()

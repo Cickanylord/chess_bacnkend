@@ -44,6 +44,7 @@ class UserController @Autowired constructor(
         }
     }
 
+    /*
     @PostMapping
     fun addUser(): ResponseEntity<ChessUser>{
         val user = ChessUser("János")
@@ -53,13 +54,24 @@ class UserController @Autowired constructor(
         userService.save(user)
         userService.save(user2)
 
-        matchService.save(match)
         return ResponseEntity.ok(user2)
     }
+
+     */
 
     @PostMapping("/addUser")
     fun addUser(@RequestBody user: ChessUser): ResponseEntity<ChessUser> {
         val chessUser: ChessUser = userService.save(user)
         return ResponseEntity.ok(chessUser)
+    }
+
+    @GetMapping("deleteUser/{user_id}")
+    fun removeUser(@PathVariable user_id: Long): ResponseEntity<String> {
+        val user = userService.getUserByID(user_id)
+        if (user != null) {
+            userService.deleteUser(user)
+            return ResponseEntity.ok("User Deleted")
+        }
+        return ResponseEntity.notFound().build()
     }
 }

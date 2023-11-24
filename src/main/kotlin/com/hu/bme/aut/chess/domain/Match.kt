@@ -1,6 +1,7 @@
 package com.hu.bme.aut.chess.domain
 
 import jakarta.persistence.*
+import org.hibernate.annotations.Cascade
 
 @Entity
 class Match(
@@ -13,7 +14,7 @@ class Match(
     val playerOne: ChessUser,
 
     @ManyToOne
-    @JoinColumn(name = "player_two_id")
+    @JoinColumn(name = "player_two_id", )
     val playerTwo: ChessUser,
 
     var board: String
