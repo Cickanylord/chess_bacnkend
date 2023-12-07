@@ -27,37 +27,39 @@ class UserController @Autowired constructor(
     @GetMapping("/id/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<ChessUser> {
         val chessUser: ChessUser? = userService.getUserByID(id)
-        return if (chessUser == null) {
-            ResponseEntity.notFound().build()
-        } else {
-            ResponseEntity.ok(chessUser)
+
+        chessUser?.let {
+            return ResponseEntity.ok(chessUser)
         }
+        return ResponseEntity.notFound().build()
     }
 
     @GetMapping("/match/{id}")
     fun getMatch(@PathVariable id: Long): ResponseEntity<Match> {
         val match: Match? = matchService.getMatchByID(id)
-        return if (match == null) {
-            ResponseEntity.notFound().build()
-        } else {
-            ResponseEntity.ok(match)
+        match?.let {
+            return ResponseEntity.ok(match)
         }
+
+        return ResponseEntity.notFound().build()
     }
 
-    /*
+
+
     @PostMapping
-    fun addUser(): ResponseEntity<ChessUser>{
+    fun addUser(): ResponseEntity<Match>{
         val user = ChessUser("János")
         val user2 = ChessUser("másik János")
 
-        val match = Match(playerOne = user, playerTwo = user2, board = "RKQKR" )
+        val match = Match(players = listOf(user, user2), board = "RKQKR" )
         userService.save(user)
         userService.save(user2)
+        matchService.save(match)
 
-        return ResponseEntity.ok(user2)
+        return ResponseEntity.ok(match)
     }
 
-     */
+
 
     @PostMapping("/addUser")
     fun addUser(@RequestBody user: ChessUser): ResponseEntity<ChessUser> {
@@ -67,10 +69,8 @@ class UserController @Autowired constructor(
 
     @GetMapping("deleteUser/{user_id}")
     fun removeUser(@PathVariable user_id: Long): ResponseEntity<String> {
-        val user = userService.getUserByID(user_id)
-        if (user != null) {
-            userService.deleteUser(user)
-            return ResponseEntity.ok("User Deleted")
+        if(userService.deleteUser(user_id)){
+            return ResponseEntity.ok("user deleted")
         }
         return ResponseEntity.notFound().build()
     }

@@ -1,8 +1,7 @@
 package com.hu.bme.aut.chess.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
+import com.hu.bme.aut.chess.repository.user.UserService
+import jakarta.persistence.*
 
 
 @Entity
@@ -12,7 +11,7 @@ class ChessUser(
     @Id
     @GeneratedValue
     //@Column(name="userId")
-    private val id: Long?=null,
+    private val id: Long?=null
 ){
     fun getname():String{
         return name
@@ -24,6 +23,17 @@ class ChessUser(
 
     fun getId(): Long?{
         return id
+    }
+
+    override fun toString(): String {
+        return "${id}_${name}"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if(other is ChessUser?){
+            return other.toString() == this.toString()
+        }
+        return super.equals(other)
     }
 }
 
