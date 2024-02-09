@@ -23,7 +23,7 @@ class Match(
     var board: String
 
 
-){
+) {
     override fun toString(): String {
         super.toString()
         return "${matchId}_${players[0]}_${players[1]}_$board"

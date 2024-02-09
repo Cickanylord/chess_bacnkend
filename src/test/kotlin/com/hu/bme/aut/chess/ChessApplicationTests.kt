@@ -3,7 +3,9 @@ package com.hu.bme.aut.chess
 import com.hu.bme.aut.chess.controller.match.StepRequest
 import com.hu.bme.aut.chess.domain.ChessUser
 import com.hu.bme.aut.chess.domain.Match
+import com.hu.bme.aut.chess.domain.Message
 import com.hu.bme.aut.chess.repository.match.MatchService
+import com.hu.bme.aut.chess.repository.message.MessageService
 import com.hu.bme.aut.chess.repository.user.UserService
 import hu.bme.aut.android.monkeychess.board.Board
 import org.junit.jupiter.api.BeforeAll
@@ -18,9 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChessApplicationTests @Autowired constructor(
 	private val userService: UserService,
-	private val matchService: MatchService
-
-
+	private val matchService: MatchService,
+	private val messageService: MessageService
 ){
 	lateinit var user: ChessUser
 	lateinit var user2: ChessUser
@@ -37,6 +38,7 @@ class ChessApplicationTests @Autowired constructor(
 	}
 	@BeforeEach
 	fun setupDB() {
+		messageService.deletAll()
 		matchService.deletAll()
 		userService.deletAll()
 		//Saving in to db
@@ -119,6 +121,17 @@ class ChessApplicationTests @Autowired constructor(
 
 		assert(matchService.getMatchesByUserID(user).filter { it.players.contains(user) }.isEmpty())
 		assert(userService.findAll().filter { it.toString() == user.toString() }.isEmpty())
+	}
+
+	@Test
+	fun messageTest() {
+
+		val message = Message("szia", user, user2)
+		messageService.save(message)
+		val saved = messageService.getMessageByID(message.messageId ?: -1)
+
+		assert(saved == message)
+		assert( messageService.getMessageByUser(user.getId() ?: -1, user2.getId() ?: -1)[0] == message)
 	}
 
 }

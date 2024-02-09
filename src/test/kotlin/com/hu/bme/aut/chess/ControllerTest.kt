@@ -3,9 +3,12 @@ package com.hu.bme.aut.chess
 import com.hu.bme.aut.chess.Util.fromGsonToList
 import com.hu.bme.aut.chess.controller.match.MatchRequest
 import com.hu.bme.aut.chess.controller.match.StepRequest
+import com.hu.bme.aut.chess.controller.message.MessageBody
 import com.hu.bme.aut.chess.domain.ChessUser
 import com.hu.bme.aut.chess.domain.Match
+import com.hu.bme.aut.chess.domain.Message
 import com.hu.bme.aut.chess.repository.match.MatchService
+import com.hu.bme.aut.chess.repository.message.MessageService
 import com.hu.bme.aut.chess.repository.user.UserService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -30,12 +33,14 @@ import java.net.URI
 class ControllerTest @Autowired constructor(
     val client: TestRestTemplate,
     private val userService: UserService,
-    private val matchService: MatchService
+    private val matchService: MatchService,
+    private val messageService: MessageService
 ){
     val listOfUser  = listOf(ChessUser("Bob"), ChessUser("Alice"))
 
     @LocalServerPort
     var randomServerPort = 0
+
     @Test
     fun userPost() {
         val uri = URI("http://localhost:$randomServerPort/api/users/addUser")
@@ -127,4 +132,35 @@ class ControllerTest @Autowired constructor(
         val nextStep = client.getForEntity<String>(URI("http://localhost:$randomServerPort/api/chess/ai/rnbqkbnr.pppp1ppp.4p3.8.8.4P3.PPPP1PPP.RNBQKBNRK_w_KQkq"))
         assert(nextStep.statusCode == HttpStatus.OK)
     }
+
+    @Test
+    fun messagePostTest(){
+        listOfUser.forEach { userService.save(it) }
+        val uri = URI("http://localhost:$randomServerPort/api/messages/postMessage")
+
+        val messageBody = MessageBody(listOfUser[0].getId() ?: -1, listOfUser[1].getId() ?: -1, "Hello World")
+        val postResult: ResponseEntity<Message> = client.postForEntity(uri, messageBody)
+
+        assert(postResult.statusCode == HttpStatus.OK)
+        assert(messageService.findAll()?.contains(postResult.body) ?: false)
+    }
+
+    @Test
+    fun messageGetMessagesByUserTest(){
+        listOfUser.forEach { userService.save(it) }
+        Message("Hello World", listOfUser[0], listOfUser[1]).let {
+            messageService.save(it)
+            println("it")
+            val result = client.getForEntity<List<Message>>(URI("http://localhost:$randomServerPort/api/messages/getMessage/${listOfUser[0].getId()}/${listOfUser[1].getId()}"))
+
+            val messageList:  List<Message> = fromGsonToList(result.body)
+            assert(result.statusCode == HttpStatus.OK)
+            assert(messageList.contains(it))
+
+            val control = client.getForEntity<List<ChessUser>>(URI("http://localhost:$randomServerPort/api/users"))
+
+
+        }
+    }
+
 }
