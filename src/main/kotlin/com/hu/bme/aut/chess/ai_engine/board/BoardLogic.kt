@@ -5,12 +5,12 @@ import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 
 fun main() {
-    val boardData: BoardData = buildBoardFromFen("rnbqkbnr/1ppppppp/8/8/p7/B7/2PPPPPP/RN1QKBNR b KQkq - 0 1")
+    val boardData: BoardData = buildBoardFromFen("rnbqkbnr/pppppppp/8/8/8/2QPPP2/PPP3PP/RNB1KBNR b KQkq - 0 1")
     val board = BoardLogic(boardData)
     println(boardData.printBoard())
     cordinate()
-    println(board.getAvailableSteps(board.board.getPiece(5,0)!!))
-    board.board.getPiece(5,0)!!.getValidSteps().forEach { println(it) }
+    println(board.getAvailableSteps(board.board.getPiece(7,4)!!))
+    board.board.getPiece(7,4)!!.getValidSteps().forEach { println(it) }
 }
 class BoardLogic(val board: BoardData){
 

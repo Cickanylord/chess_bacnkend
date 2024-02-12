@@ -44,7 +44,7 @@ open class BoardData() {
     var whiteSidePosition = Side.DOWN
     var BlackSidePosition = Side.UP
     var activeColor: PieceColor = PieceColor.WHITE
-    var castlingAvailable = castlingRights.isFullOfFalse().not()
+    var castlingAvailable = false//castlingRights.isFullOfFalse().not()
 
     val numRows = 8
     val numColumns = 8
@@ -169,9 +169,9 @@ open class BoardData() {
     fun printBoard(): String {
         var boardString = ""
 
-        board.forEach{
-            it.forEach() {
-                boardString += it.piece?.letter ?: '-'
+        board.forEach {
+            it.forEach() { tile ->
+                boardString += tile.piece?.letter ?: if(tile.free) {"-"} else {"x"}
             }
             boardString += "\n"
         }
