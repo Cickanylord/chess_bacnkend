@@ -17,4 +17,20 @@ interface  Piece  {
     var side: Side
     var i: Int
     var j: Int
+
+    var letter: Char
+        get() = name.toString()[0].let {
+            var pieceChar = it
+            if(name == PieceName.KNIGHT){
+                pieceChar = 'N'
+            }
+
+            if (pieceColor == PieceColor.BLACK) {
+                pieceChar.lowercaseChar()
+            } else {
+                pieceChar
+            }
+        }
+
+        set(value) {}
 }

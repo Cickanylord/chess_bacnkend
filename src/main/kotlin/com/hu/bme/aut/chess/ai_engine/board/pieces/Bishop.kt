@@ -40,24 +40,24 @@ data class Bishop(
 
             for (col in 0 until 8){
 
-                if(col + i != i && col + i < 8  && j+col < 8 ){
+                if (col + i != i && col + i < 8  && j+ col < 8 ) {
                     steps[0].add(Pair(col + i,j + col))
 
                 }
 
 
-                if(col + i != i && col + i < 8 && j-col >= 0 ){
+                if (col + i != i && col + i < 8 && j-col >= 0 ) {
                     steps[1].add(Pair(col + i ,j - col))
                 }
 
 
 
-                if(col + i != i && j + col < 8 && i-col >= 0){
+                if (col + i != i && j + col < 8 && i-col >= 0) {
                     steps[2].add(Pair(i-col,j+col))
                 }
 
 
-                if(col + i != i && j - col >= 0 && i - col >= 0){
+                if (col + i != i && j - col >= 0 && i - col >= 0) {
                     steps[3].add(Pair(i - col,j - col))
 
                 }

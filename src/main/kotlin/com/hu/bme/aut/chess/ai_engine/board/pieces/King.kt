@@ -43,8 +43,8 @@ data class King(
     }
 
     override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
-        val steps = Array(8) { mutableListOf<Pair<Int, Int>>() }
-
+        val steps = Array(10) { mutableListOf<Pair<Int, Int>>() }
+        //normal steps
         if(i + 1 < 8 ){
             steps[0].add(Pair(i + 1, j))
 
@@ -71,6 +71,35 @@ data class King(
             if(j + 1 < 8 )
                 steps[7].add(Pair(i - 1, j + 1))
         }
+
+
+        //Castling
+        //posible king places
+        /*
+        wu 7,3
+        wd 7,4
+
+        bu 0,4
+        bd 7,3
+         */
+
+
+        val castlingRow = if (side == Side.UP) 0 else 7
+        var castlingColumn = 1
+
+
+        if (pieceColor == PieceColor.WHITE) {
+            if (side == Side.DOWN && i == 7 && j == 3) { castlingColumn = 2 }
+        } else {
+            if (side == Side.UP) { castlingColumn = 2 }
+        }
+
+
+        steps[8].add(Pair(castlingRow, castlingColumn))
+        steps[9].add(Pair(castlingRow, castlingColumn + 4))
+
+
+
         return steps
     }
 }

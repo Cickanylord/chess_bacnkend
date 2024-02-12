@@ -42,25 +42,32 @@ data class Pawn(
     }
 
     override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
-        val steps = Array(1) { mutableListOf<Pair<Int, Int>>() }
+        val steps = Array(3) { mutableListOf<Pair<Int, Int>>() }
 
-        if(side  == Side.UP){
-            if(i==1){
-                steps[0].add(Pair(i+2,j))
-            }
-            if(i < 7 ){
-                steps[0].add(Pair(i+1,j))
-            }
+        if (side  == Side.UP) {
+
+            if (i < 7) { steps[0].add(Pair(i + 1, j)) }
+            if (i == 1) { steps[0].add(Pair(i + 2, j)) }
+
+
+            //side step
+            if (j > 0) { steps[1].add(Pair(i + 1,j - 1 )) }
+            if (j < 7) { steps[2].add(Pair(i + 1,j + 1 )) }
 
         }
 
-        if(side  == Side.DOWN){
-            if(i==6){
-                steps[0].add(Pair(i-2,j))
+        if (side  == Side.DOWN) {
+            if (i > 0) {
+                steps[0].add(Pair(i - 1, j))
             }
-            if(i > 0){
-                steps[0].add(Pair(i-1,j))
+
+            if (i == 6) {
+                steps[0].add(Pair(i - 2, j))
             }
+
+
+            if (j > 0) { steps[1].add(Pair(i - 1,j - 1 )) }
+            if (j < 7) { steps[2].add(Pair(i - 1,j + 1 )) }
 
         }
 

@@ -557,12 +557,11 @@ class Board(var aiBoard: Boolean= false){
 
 
         fun getPiece(row: Int, col: Int): Piece {
-            return board.get(row).get(col).pice
+            return board[row][col].pice
         }
 
         fun getPiece(pos: Pair<Int, Int>): Piece {
-            val piece = board.get(pos.first).get(pos.second).pice
-            return  piece
+            return board[pos.first][pos.second].pice
         }
 
         fun getStepsforColor(color: PieceColor, runspec: Boolean = false): List<Pair<Int, Int>> {
