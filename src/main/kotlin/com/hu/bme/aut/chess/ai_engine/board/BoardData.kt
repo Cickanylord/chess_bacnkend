@@ -171,7 +171,7 @@ open class BoardData() {
 
         board.forEach {
             it.forEach() { tile ->
-                boardString += tile.piece?.letter ?: if(tile.free) {"-"} else {"x"}
+                boardString += tile.piece?.letter ?: if(!tile.free) {"-"} else {"X"}
             }
             boardString += "\n"
         }

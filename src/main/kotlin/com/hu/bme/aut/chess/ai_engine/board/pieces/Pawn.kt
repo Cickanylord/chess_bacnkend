@@ -31,12 +31,10 @@ data class Pawn(
         j = 7 - j
         this.position = Pair(i,j)
 
-        if(side==Side.DOWN) {
-            side = Side.UP
-        }
-
-        else{
-            side=Side.DOWN
+        side = if(side==Side.DOWN) {
+            Side.UP
+        } else {
+            Side.DOWN
         }
 
     }
@@ -46,31 +44,28 @@ data class Pawn(
 
         if (side  == Side.UP) {
 
-            if (i < 7) { steps[0].add(Pair(i + 1, j)) }
-            if (i == 1) { steps[0].add(Pair(i + 2, j)) }
+            steps[0].add(Pair(i + 1, j))
+            if (i == 1) {
+                steps[0].add(Pair(i + 2, j))
+            }
 
 
             //side step
-            if (j > 0) { steps[1].add(Pair(i + 1,j - 1 )) }
-            if (j < 7) { steps[2].add(Pair(i + 1,j + 1 )) }
-
+            steps[1].add(Pair(i + 1, j - 1))
+            steps[2].add(Pair(i + 1, j + 1))
         }
 
         if (side  == Side.DOWN) {
-            if (i > 0) {
-                steps[0].add(Pair(i - 1, j))
-            }
+            steps[0].add(Pair(i - 1, j))
 
             if (i == 6) {
                 steps[0].add(Pair(i - 2, j))
             }
 
 
-            if (j > 0) { steps[1].add(Pair(i - 1,j - 1 )) }
-            if (j < 7) { steps[2].add(Pair(i - 1,j + 1 )) }
-
+            steps[1].add(Pair(i - 1, j - 1))
+            steps[2].add(Pair(i - 1, j + 1))
         }
-
-        return steps
+        return dropOutOfBoardSteps(steps)
     }
 }

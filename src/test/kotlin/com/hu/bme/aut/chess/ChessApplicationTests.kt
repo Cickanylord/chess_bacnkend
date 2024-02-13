@@ -26,8 +26,8 @@ class ChessApplicationTests @Autowired constructor(
 	lateinit var user: ChessUser
 	lateinit var user2: ChessUser
 	lateinit var user3: ChessUser
-	lateinit var  match: Match
-	lateinit var  match2: Match
+	lateinit var match: Match
+	lateinit var match2: Match
 	@BeforeAll
 	fun setupVariables() {
 		user = ChessUser("János")

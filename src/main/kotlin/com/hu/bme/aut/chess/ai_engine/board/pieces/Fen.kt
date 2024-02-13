@@ -110,7 +110,7 @@ fun fenCharToPiece(fenChar: Char, i: Int, j: Int): Piece {
 }
 
 
-/*
+/**
 in the Quad castling rights are stored
 t1 = white queen side
 t2 = white king side

@@ -18,7 +18,7 @@ interface  Piece  {
     var i: Int
     var j: Int
 
-    var letter: Char
+    val letter: Char
         get() = name.toString()[0].let {
             var pieceChar = it
             if(name == PieceName.KNIGHT){
@@ -31,6 +31,11 @@ interface  Piece  {
                 pieceChar
             }
         }
-
-        set(value) {}
+    fun dropOutOfBoardSteps(steps :Array<MutableList<Pair<Int, Int>>>): Array<MutableList<Pair<Int, Int>>> {
+        return steps.map {
+            it.filter {
+                (it.first in 0..7 && it.second in 0..7 )
+            }.toMutableList()
+        }.toTypedArray()
+    }
 }

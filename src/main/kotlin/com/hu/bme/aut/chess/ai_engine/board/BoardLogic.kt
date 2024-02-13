@@ -9,15 +9,16 @@ fun main() {
     val board = BoardLogic(boardData)
     println(boardData.printBoard())
     cordinate()
-    println(board.getAvailableSteps(board.board.getPiece(7,4)!!))
-    board.board.getPiece(7,4)!!.getValidSteps().forEach { println(it) }
+    //board.board.getPiece(5,2)!!.getValidSteps().forEach { println(it) }
+    println(board.getAvailableSteps(board.board.getPiece(6,0)!!))
+    board.board.getPiece(6,0)!!.getValidSteps().forEach { println(it) }
 }
 class BoardLogic(val board: BoardData){
 
     fun getAvailableSteps(piece: Piece): MutableList<Pair<Int, Int>> {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
 
-        getAvailableStepsInaLine(piece, final)
+        getAvailableStepsInALine(piece, final)
 
         //castlingCheck
         if (board.castlingAvailable && piece.name == PieceName.KING) {
@@ -32,7 +33,7 @@ class BoardLogic(val board: BoardData){
 Checks the available steps in a line and removes the invalids moves from the possible moves
 
  */
-    fun getAvailableStepsInaLine(piece: Piece, final: MutableList<Pair<Int, Int>>) {
+    fun getAvailableStepsInALine(piece: Piece, final: MutableList<Pair<Int, Int>>) {
         piece.getValidSteps().forEach {
             for (i in it.indices) {
                 val currentField = it[i]

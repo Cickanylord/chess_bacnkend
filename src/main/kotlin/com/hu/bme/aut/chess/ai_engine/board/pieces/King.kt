@@ -32,53 +32,31 @@ data class King(
         j = 7 - j
         this.position = Pair(i,j)
 
-        if(side==Side.DOWN) {
-            side = Side.UP
+        side = if (side==Side.DOWN) {
+            Side.UP
+        } else {
+            Side.DOWN
         }
-
-        else{
-            side=Side.DOWN
-        }
-
     }
 
     override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>> {
         var steps = Array(10) { mutableListOf<Pair<Int, Int>>() }
         //normal steps
-
-            steps[0].add(Pair(i + 1, j))
-
-
-                steps[1].add(Pair(i + 1, j - 1))
-
-
-
-                steps[2].add(Pair(i + 1, j + 1))
-
-
-            steps[3].add(Pair(i, j - 1))
-
-
-            steps[4].add(Pair(i, j + 1))
-
-
-
-            steps[5].add(Pair(i - 1, j))
-
-                steps[6].add(Pair(i - 1, j - 1))
-
-                steps[7].add(Pair(i - 1, j + 1))
-
-
-
+        steps[0].add(Pair(i + 1, j))
+        steps[1].add(Pair(i + 1, j - 1))
+        steps[2].add(Pair(i + 1, j + 1))
+        steps[3].add(Pair(i, j - 1))
+        steps[4].add(Pair(i, j + 1))
+        steps[5].add(Pair(i - 1, j))
+        steps[6].add(Pair(i - 1, j - 1))
+        steps[7].add(Pair(i - 1, j + 1))
         //Castling
         val castlingRow = if (side == Side.UP) 0 else 7
 
         steps[8].add(Pair(castlingRow, j + 2))
         steps[9].add(Pair(castlingRow, j - 2))
 
-
-
-        return steps.map { it.filter { (it.first in 0..7 && it.second in 0..7 ) }.toMutableList() }.toTypedArray()
+        //returns all possible steps
+        return dropOutOfBoardSteps(steps)
     }
 }

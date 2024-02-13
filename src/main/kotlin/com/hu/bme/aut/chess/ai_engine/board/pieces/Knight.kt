@@ -30,12 +30,10 @@ data class Knight(
         j = 7 - j
         this.position = Pair(i,j)
 
-        if(side==Side.DOWN) {
-            side = Side.UP
-        }
-
-        else{
-            side=Side.DOWN
+        side = if(side==Side.DOWN) {
+            Side.UP
+        } else{
+            Side.DOWN
         }
 
     }
@@ -44,38 +42,15 @@ data class Knight(
     override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
         val steps = Array(8) { mutableListOf<Pair<Int, Int>>() }
 
-        if(i + 2 < 8 && j +1 < 8){
-            steps[0].add(Pair(i + 2, j +1))
-        }
+        steps[0].add(Pair(i + 2, j + 1))
+        steps[1].add(Pair(i + 2, j - 1))
+        steps[2].add(Pair(i + 1, j + 2))
+        steps[3].add(Pair(i + 1, j - 2))
+        steps[4].add(Pair(i - 1, j - 2))
+        steps[5].add(Pair(i - 1, j + 2))
+        steps[6].add(Pair(i - 2, j + 1))
+        steps[7].add(Pair(i - 2, j - 1))
 
-        if(i + 2 < 8 && j - 1 >= 0){
-            steps[1].add(Pair(i + 2, j - 1))
-        }
-
-        if(i + 1 < 8 && j + 2 < 8){
-            steps[2].add(Pair(i + 1, j + 2))
-        }
-
-        if(i + 1 < 8 && j - 2 >= 0){
-            steps[3].add(Pair(i + 1, j - 2))
-        }
-
-        if(i - 1 >= 0 && j - 2 >= 0){
-            steps[4].add(Pair(i - 1, j - 2))
-        }
-
-        if(i - 1 >= 0 && j + 2 < 8){
-            steps[5].add(Pair(i - 1,  j + 2))
-        }
-
-        if(i - 2 >= 0 && j +1 < 8){
-            steps[6].add(Pair(i - 2, j +1))
-        }
-
-        if(i - 2 >= 0 && j - 1 >= 0){
-            steps[7].add(Pair(i - 2, j - 1))
-        }
-
-        return steps
+        return dropOutOfBoardSteps(steps)
     }
 }

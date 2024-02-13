@@ -31,12 +31,10 @@ data class Queen(
         j = 7 - j
         this.position = Pair(i,j)
 
-        if(side==Side.DOWN) {
-            side = Side.UP
-        }
-
-        else{
-            side=Side.DOWN
+        side = if (side==Side.DOWN) {
+            Side.UP
+        } else {
+            Side.DOWN
         }
 
     }
@@ -44,38 +42,20 @@ data class Queen(
         val steps = Array(8) { mutableListOf<Pair<Int, Int>>() }
 
 
-        for (counter in 0 until 8){
+        for (counter in 1 until 8){
             //diagonal
-            if(counter + i != i && counter + i < 8  && j+counter < 8 )
-                steps[0].add(Pair(counter + i,j + counter))
-
-            if(counter + i != i && counter + i < 8 && j-counter >= 0 )
-                steps[1].add(Pair(counter + i ,j - counter))
-
-
-            if(counter + i != i && j + counter < 8 && i-counter >= 0){
-                steps[2].add(Pair(i-counter,j+counter))
-            }
-
-
-            if(counter + i != i && j - counter >= 0 && i - counter >= 0)
-                steps[3].add(Pair(i - counter,j - counter))
-
+            steps[0].add(Pair(i + counter, j + counter))
+            steps[1].add(Pair(i + counter, j - counter))
+            steps[2].add(Pair(i - counter, j + counter))
+            steps[3].add(Pair(i - counter, j - counter))
 
             //straight
-            if (i + counter < 8)
-                steps[4].add(Pair(i + counter, j))
-
-            if (i - counter >= 0)
-                steps[5].add(Pair(i - counter, j))
-
-            if (j + counter < 8)
-                steps[6].add(Pair(i, j + counter))
-
-            if (j - counter >= 0)
-                steps[7].add(Pair(i, j - counter))
+            steps[4].add(Pair(i + counter, j))
+            steps[5].add(Pair(i - counter, j))
+            steps[6].add(Pair(i, j + counter))
+            steps[7].add(Pair(i, j - counter))
         }
 
-        return steps
+        return dropOutOfBoardSteps(steps)
     }
 }

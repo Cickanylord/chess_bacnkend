@@ -25,44 +25,22 @@ data class Bishop(
         j = 7 - j
         this.position = Pair(i,j)
 
-        if(side==Side.DOWN) {
-            side = Side.UP
-        }
-
-        else{
-            side=Side.DOWN
+        side = if(side==Side.DOWN) {
+            Side.UP
+        } else {
+            Side.DOWN
         }
 
     }
 
     override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>> {
         val steps = Array(4) { mutableListOf<Pair<Int, Int>>() }
-
-            for (col in 0 until 8){
-
-                if (col + i != i && col + i < 8  && j+ col < 8 ) {
-                    steps[0].add(Pair(col + i,j + col))
-
-                }
-
-
-                if (col + i != i && col + i < 8 && j-col >= 0 ) {
-                    steps[1].add(Pair(col + i ,j - col))
-                }
-
-
-
-                if (col + i != i && j + col < 8 && i-col >= 0) {
-                    steps[2].add(Pair(i-col,j+col))
-                }
-
-
-                if (col + i != i && j - col >= 0 && i - col >= 0) {
-                    steps[3].add(Pair(i - col,j - col))
-
-                }
+            for (col in 1 until 8) {
+                steps[0].add(Pair(i + col, j + col))
+                steps[1].add(Pair(i + col, j - col))
+                steps[2].add(Pair(i - col, j + col))
+                steps[3].add(Pair(i - col, j - col))
             }
-
-        return steps
+        return dropOutOfBoardSteps(steps)
     }
 }
