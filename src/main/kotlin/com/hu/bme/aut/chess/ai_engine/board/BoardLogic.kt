@@ -1,35 +1,45 @@
 package com.hu.bme.aut.chess.ai_engine.board
 
 import com.hu.bme.aut.chess.Util.Quad
-import com.hu.bme.aut.chess.ai_engine.board.pieces.Fen
-import com.hu.bme.aut.chess.ai_engine.board.pieces.buildBoardFromFen
-import com.hu.bme.aut.chess.ai_engine.board.pieces.castlingRights
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
-import hu.bme.aut.android.monkeychess.board.TileNew
-import hu.bme.aut.android.monkeychess.board.pieces.Queen
 import kotlin.math.absoluteValue
 
 fun main() {
-    val boardData: BoardData = buildBoardFromFen("r3kbnr/pppppppp/8/8/3B4/2Q5/8/R3K1pR b KQkq - 0 1")
+    val boardData = BoardData("r3kbnr/pppppppp/8/8/3B4/8/8/R3K2R b Qq - 0 1")
     val board = BoardLogic(boardData)
     println(boardData.printBoard())
     cordinate()
+    val king = board.board.getPiece(7,4)!!
+    board.move(king, Pair(6,4))
+    king.getValidSteps().forEach { println(it) }
+    println("real")
+    println(board.getLegalMoves(king))
+    println(boardData.printBoard())
+
     //board.board.getPiece(5,2)!!.getValidSteps().forEach { println(it) }
-    println(board.getAvailableSteps(board.board.getPiece(7,4)!!))
-    board.board.getPiece(7,4)!!.getValidSteps().forEach { println(it) }
-    board.step(board.board.getPiece(7,7)!!, Pair(6,7))
+    /*
+    println(board.getAvailableSteps(board.board.getPiece(0,4)!!))
+    board.board.getPiece(0,4)!!.getValidSteps().forEach { println(it) }
+    board.step(board.board.getPiece(0,4)!!, Pair(0,3))
     println(Fen(boardData).toString())
     println(boardData.printBoard())
+
+     */
 }
 class BoardLogic(val board: BoardData) {
 
-    fun getAvailableSteps(piece: Piece): MutableList<Pair<Int, Int>> {
+
+    /**
+     * This function gets all the legal steps for a piece
+     * @param piece the piece which moves we get
+     * @return the list of legal steps
+     */
+    fun getLegalMoves(piece: Piece): MutableList<Pair<Int, Int>> {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
 
-        getAvailableStepsInALine(piece, final)
+        getLegalMovesInALine(piece, final)
 
         //castlingCheck
 
@@ -37,23 +47,25 @@ class BoardLogic(val board: BoardData) {
     }
 
 
-/**
-Checks the available steps in a line and removes the invalids moves from the possible moves
-@Param piece
- */
-    fun getAvailableStepsInALine(piece: Piece, final: MutableList<Pair<Int, Int>>) {
+    /**
+     * Scans the pieces legal moves line by line
+     * @param piece the piece which moves are getting calculated
+     * @param final the list of the valid moves
+     */
+    fun getLegalMovesInALine(piece: Piece, final: MutableList<Pair<Int, Int>>) {
         piece.getValidSteps().forEach {
             for (i in it.indices) {
                 val currentField = it[i]
                 val currentPiece = board.getPiece(currentField.first, currentField.second)
 
                 if (currentField != piece.position) {
-                    //other pieces
+                    //There is a piece on this field
                     if (currentPiece != null) {
-                        //if the piece is from the other color it can be removed
+                        //if the piece is from the other color it can be captured
                         if (piece.pieceColor != currentPiece.pieceColor) { final.add(currentField) }
-                        //because pawns can only hit sideways -> it can't remove piece in front
+                        //because pawns can only hit sideways -> it can't capture piece in front
                         if (currentField.second == piece.j && piece.name == PieceName.PAWN) { final.remove(currentField) }
+                        //the piece can't be move past other pieces -> the lines has no more legal moves
                         break
                     }
 
@@ -71,16 +83,38 @@ Checks the available steps in a line and removes the invalids moves from the pos
         }
     }
 
-    fun step(piece: Piece, step: Pair<Int, Int>) {
-        val steps = getAvailableSteps(piece)
-        if (steps.contains(step)) {
-            //TODO EN-PASSANT AND CASTLING STEPS
-            board.movePiece(piece, step)
-            if (piece.name == PieceName.KING && (step.second - piece.j).absoluteValue == 2) {
+    /**
+     * Implement piece movement logic.
+     * @param move the step we want to make
+     * @param piece the piece we want to step with.
+     *
+     * The function invokes the get
+     */
 
+    fun move(piece: Piece, move: Pair<Int, Int>) {
+        val moves = getLegalMoves(piece)
+        if (moves.contains(move)) {
+            //TODO EN-PASSANT AND CASTLING move
+
+            //Moving the rook when castling
+            if (piece.name == PieceName.KING) {
+                val i = if(piece.pieceColor == PieceColor.WHITE) { 7 } else { 0 }
+
+                //Castles KingSide rook
+                if (move.second - piece.j == 2) {
+                    board.movePiece(board.getPiece(i,7), Pair(i, 5))
+                }
+                //Castles QueenSide rook
+                if (move.second - piece.j == -2) {
+                    board.movePiece(board.getPiece(i,0), Pair(i, 3))
+                }
             }
+            //moves the piece on the board
+            board.movePiece(piece, move)
 
             //updating the board after the step
+            //setting castling rights after a step on the board
+            //The king moves
             if (piece.name == PieceName.KING) {
                 when (piece.pieceColor) {
                     PieceColor.WHITE -> { board.castlingRights = Quad(false, false, true, true) }
@@ -88,6 +122,7 @@ Checks the available steps in a line and removes the invalids moves from the pos
                     else -> throw  IllegalArgumentException("no such color")
                 }
             }
+            //Rook moves
             if (piece.name == PieceName.ROOK) {
                 when(piece.j) {
                     //QueenSide
@@ -104,9 +139,6 @@ Checks the available steps in a line and removes the invalids moves from the pos
                 }
             }
         }
-        //setting castling rights after a step on the board
-        //The king moves
-
     }
 
 
@@ -129,8 +161,8 @@ Checks the available steps in a line and removes the invalids moves from the pos
             }
             //checks for castling right
             return when (piece.pieceColor) {
-                PieceColor.WHITE -> { rights.t1.not() }
-                PieceColor.BLACK -> { rights.t3.not() }
+                PieceColor.WHITE -> { rights.t2.not() }
+                PieceColor.BLACK -> { rights.t4.not() }
                 else -> throw IllegalArgumentException("no such color")
             }
         }
@@ -142,8 +174,8 @@ Checks the available steps in a line and removes the invalids moves from the pos
             }
             //checks for castling rights
             return when(piece.pieceColor) {
-                PieceColor.WHITE -> { rights.t2.not() }
-                PieceColor.BLACK -> { rights.t4.not() }
+                PieceColor.WHITE -> { rights.t1.not() }
+                PieceColor.BLACK -> { rights.t3.not() }
                 else -> throw IllegalArgumentException("no such color")
             }
         }

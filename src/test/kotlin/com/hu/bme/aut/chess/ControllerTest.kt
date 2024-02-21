@@ -1,6 +1,7 @@
 package com.hu.bme.aut.chess
 
-import com.hu.bme.aut.chess.Util.fromGsonToList
+
+import com.hu.bme.aut.chess.Util.Util.fromGsonToList
 import com.hu.bme.aut.chess.controller.match.MatchRequest
 import com.hu.bme.aut.chess.controller.match.StepRequest
 import com.hu.bme.aut.chess.controller.message.MessageBody

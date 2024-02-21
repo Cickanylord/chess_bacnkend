@@ -21,6 +21,16 @@ data class Quad(var t1: Boolean, var t2: Boolean, var t3: Boolean, var t4: Boole
          }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other is Quad) {
+            return this[0] == other [0] && this[1] == other [1] && this[2] == other [2] && this[3] == other [3]
+        }
+
+
+
+        return super.equals(other)
+    }
+
 
     fun isFullOfFalse(): Boolean {
         return !(t1 || t2 || t3 || t4)
@@ -29,6 +39,8 @@ data class Quad(var t1: Boolean, var t2: Boolean, var t3: Boolean, var t4: Boole
     fun hasTrue(): Boolean {
         return !isFullOfFalse()
     }
+
+
 
 
 }

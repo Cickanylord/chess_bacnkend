@@ -15,7 +15,8 @@ class Fen(val boardData: BoardData) {
         get() = boardData.activeColor.name[0].lowercaseChar()
 
     override fun toString(): String{
-        return "${piecePlacement()} $activeColor ${castlingRights()}"
+        //TODO en-passant + step counter
+        return "${piecePlacement()} $activeColor ${castlingRights()} - 0 1"
     }
 
     fun piecePlacement(): String {
@@ -62,23 +63,27 @@ class Fen(val boardData: BoardData) {
     }
 }
 
+
+/*
 fun buildBoardFromFen(fen: String): BoardData {
     val splitFen = fen.split(" ")
     val listOfPieces: MutableList<Piece> = piecePlacement(splitFen[0])
     val activeColor =
         if (splitFen[1] == "b") { PieceColor.BLACK }
         else if(splitFen[1] == "w") { PieceColor.WHITE }
-        else {throw IllegalArgumentException("invalid char must be w/b actual: ${splitFen[1]}")}
+        else { throw IllegalArgumentException("invalid char must be w/b actual: ${splitFen[1]}") }
 
 
     return BoardData(listOfPieces, activeColor, castlingRights(fen))
 }
 
-fun piecePlacement(fenFragment: String): MutableList<Piece>{
+ */
+
+fun piecePlacement(piecePlacementString: String): MutableList<Piece> {
     val listOfPieces: MutableList<Piece> = mutableListOf()
     var i: Int = 0
     var j: Int = 0
-    fenFragment.forEach() { fenChar ->
+    piecePlacementString.forEach() { fenChar ->
         //empty tiles
         if(fenChar.isDigit()) {
             j += fenChar.toString().toInt() -1
@@ -94,6 +99,13 @@ fun piecePlacement(fenFragment: String): MutableList<Piece>{
         }
     }
     return listOfPieces
+}
+
+fun activeColor(activeColorChar: String): PieceColor {
+    if (activeColorChar == "b") { return PieceColor.BLACK }
+    else if(activeColorChar == "w") { return PieceColor.WHITE }
+    else { throw IllegalArgumentException("invalid char must be w/b actual: $activeColorChar") }
+
 }
 
 fun fenCharToPiece(fenChar: Char, i: Int, j: Int): Piece {
@@ -121,21 +133,20 @@ fun fenCharToPiece(fenChar: Char, i: Int, j: Int): Piece {
 
 /**
 in the Quad castling rights are stored
-t1 = white queen side
-t2 = white king side
-t3 = black queen side
-t4 = black king side
+t1 = white king side
+t2 = white queen side
+t3 = black king side
+t4 = black queen side
+
 
 if castling is available then its set to true
  */
-fun castlingRights(fen: String): Quad {
+fun castlingRights(castlingChars: String): Quad {
     val rights = Quad(false, false, false, false)
-    fen.split(" ")[2].let { castlingChars ->
-        if(castlingChars == "-") { return rights }
-        if (castlingChars.contains('K')) { rights.t1 = true }
-        if (castlingChars.contains('Q')) { rights.t2 = true }
-        if (castlingChars.contains('k')) { rights.t3 = true }
-        if (castlingChars.contains('q')) { rights.t4 = true }
-    }
+    if(castlingChars == "-") { return rights }
+    if (castlingChars.contains('K')) { rights.t1 = true }
+    if (castlingChars.contains('Q')) { rights.t2 = true }
+    if (castlingChars.contains('k')) { rights.t3 = true }
+    if (castlingChars.contains('q')) { rights.t4 = true }
     return rights
 }
