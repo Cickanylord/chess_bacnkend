@@ -1,5 +1,6 @@
 package com.hu.bme.aut.chess.ai_engine.board
 
+import com.hu.bme.aut.chess.Util.Quad
 import com.hu.bme.aut.chess.ai_engine.board.pieces.Fen
 import com.hu.bme.aut.chess.ai_engine.board.pieces.buildBoardFromFen
 import com.hu.bme.aut.chess.ai_engine.board.pieces.castlingRights
@@ -35,19 +36,30 @@ fun main() {
 }
 
 
-open class BoardData() {
-    var currentFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    var fen: Fen = Fen(this)
-
-    var castlingRights = castlingRights(currentFen)
+class BoardData() {
+    var fen: Fen
+    var castlingRights: Quad = Quad(true, true, true, true)
+        set(rights: Quad) {
+            for (i in 0..3) {
+                if (castlingRights[i]) {
+                    field[i] = rights[i]
+                }
+            }
+            field = rights
+        }
 
     var whiteSidePosition = Side.DOWN
     var BlackSidePosition = Side.UP
     var activeColor: PieceColor = PieceColor.WHITE
-    var castlingAvailable = false//castlingRights.isFullOfFalse().not()
+    var castlingAvailable: Boolean //castlingRights.isFullOfFalse().not()
 
     val numRows = 8
     val numColumns = 8
+
+    val whiteHasCastlingRight
+        get() = (castlingRights.t1 || castlingRights.t2)
+    val blackHasCastlingRight
+        get() = (castlingRights.t3 || castlingRights.t4)
 
     var board: Array<Array<TileNew>> = arrayOf(arrayOf())
 
@@ -93,16 +105,22 @@ open class BoardData() {
                 else { TileNew(false, null) }
             }
         }
-
+        fen = Fen(this)
+        castlingRights = castlingRights(fen.toString())
+        castlingAvailable = castlingRights.hasTrue()
     }
 
-    constructor(pieces: MutableList<Piece>, activeColor: PieceColor): this() {
+    constructor(pieces: MutableList<Piece>, activeColor: PieceColor, castlingRights: Quad): this() {
         this.activeColor = activeColor
         Array(numRows) { row ->
-            Array(numColumns) { column ->  TileNew(false, null)
+            Array(numColumns) { column ->
+                TileNew(false, null)
             }
         }
         loadBoard(pieces)
+        fen = Fen(this)
+        this.castlingRights = castlingRights
+        castlingAvailable = castlingRights.hasTrue()
     }
 
 
@@ -133,7 +151,21 @@ open class BoardData() {
         val piece = board[pos.first][pos.second].piece
         return piece!!
     }
+    fun movePiece(piece: Piece?, pos: Pair<Int, Int>) {
+        //add piece
+        board[pos.first][pos.second].piece = piece
+        piece?.let {
+            //remove piece
+            board[piece.i][piece.j].piece = null
 
+            //changes the piece position
+            it.position = pos
+        }
+    }
+
+    /**
+     * after the pieces are loaded in this function adds the pieces to their place on the board.
+     */
     fun addPiece(piece: Piece) {
         board[piece.i][piece.j] = TileNew(false, piece)
     }
@@ -177,6 +209,25 @@ open class BoardData() {
         }
         return boardString
     }
+
+    fun colorHasCastlingRight(color: PieceColor): Boolean {
+        return when(color) {
+            PieceColor.WHITE -> {
+                (castlingRights.t1 || castlingRights.t2)
+            }
+
+            PieceColor.BLACK -> {
+                (castlingRights.t3 || castlingRights.t4)
+            }
+
+            else -> throw IllegalArgumentException("there is no such color $color")
+        }
+    }
+
+    /**
+     * if there is a true value in the castling rights quad it sets it to true or false
+     * if the right is false it can't be set to true again.
+     */
 
 }
 

@@ -11,8 +11,11 @@ import hu.bme.aut.android.monkeychess.board.pieces.*
 import kotlin.IllegalArgumentException
 
 class Fen(val boardData: BoardData) {
+    val activeColor: Char
+        get() = boardData.activeColor.name[0].lowercaseChar()
+
     override fun toString(): String{
-        return "${piecePlacement()} ${activeColor()}"
+        return "${piecePlacement()} $activeColor ${castlingRights()}"
     }
 
     fun piecePlacement(): String {
@@ -48,8 +51,14 @@ class Fen(val boardData: BoardData) {
         return boardFEN.dropLast(1)
     }
 
-    fun activeColor(): Char{
-        return boardData.activeColor.name[0].lowercaseChar()
+    fun castlingRights(): String {
+        var castlingChars = ""
+        if (boardData.castlingRights.t1) { castlingChars += 'K'}
+        if (boardData.castlingRights.t2) { castlingChars += 'Q'}
+        if (boardData.castlingRights.t3) { castlingChars += 'k'}
+        if (boardData.castlingRights.t4) { castlingChars += 'q'}
+        if (castlingChars.isBlank()) { return "-" }
+        return castlingChars
     }
 }
 
@@ -62,7 +71,7 @@ fun buildBoardFromFen(fen: String): BoardData {
         else {throw IllegalArgumentException("invalid char must be w/b actual: ${splitFen[1]}")}
 
 
-    return BoardData(listOfPieces, activeColor)
+    return BoardData(listOfPieces, activeColor, castlingRights(fen))
 }
 
 fun piecePlacement(fenFragment: String): MutableList<Piece>{
@@ -114,19 +123,19 @@ fun fenCharToPiece(fenChar: Char, i: Int, j: Int): Piece {
 in the Quad castling rights are stored
 t1 = white queen side
 t2 = white king side
-t3 = white queen side
-t4 = white king side
+t3 = black queen side
+t4 = black king side
 
 if castling is available then its set to true
  */
-fun castlingRights(fen: String): Quad<Boolean,Boolean,Boolean,Boolean> {
+fun castlingRights(fen: String): Quad {
     val rights = Quad(false, false, false, false)
-    fen.split(" ")[1].let { castlingChars ->
+    fen.split(" ")[2].let { castlingChars ->
         if(castlingChars == "-") { return rights }
         if (castlingChars.contains('K')) { rights.t1 = true }
-        if (castlingChars.contains('Q')) { rights.t1 = true }
-        if (castlingChars.contains('k')) { rights.t1 = true }
-        if (castlingChars.contains('q')) { rights.t1 = true }
+        if (castlingChars.contains('Q')) { rights.t2 = true }
+        if (castlingChars.contains('k')) { rights.t3 = true }
+        if (castlingChars.contains('q')) { rights.t4 = true }
     }
     return rights
 }

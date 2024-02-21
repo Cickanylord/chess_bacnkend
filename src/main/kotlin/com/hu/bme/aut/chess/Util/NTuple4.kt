@@ -1,7 +1,7 @@
 package com.hu.bme.aut.chess.Util
 
-data class Quad<T1, T2, T3, T4>(var t1: T1, var t2: T2, var t3: T3, var t4: T4) {
-    operator fun get(i: Int): Any? {
+data class Quad(var t1: Boolean, var t2: Boolean, var t3: Boolean, var t4: Boolean) {
+    operator fun get(i: Int): Boolean {
         return when(i) {
             0 -> t1
             1 -> t2
@@ -11,14 +11,24 @@ data class Quad<T1, T2, T3, T4>(var t1: T1, var t2: T2, var t3: T3, var t4: T4) 
         }
     }
 
-    /*
-    fun isFullOfFalse(): Boolean{
-        if (t1 is Boolean && t2 is Boolean && t3 is Boolean && t4 is Boolean ) {
-            return !(t1 || t2 || t3 || t4)
-        }
-        else throw IllegalArgumentException("this only works if the quad only has booleans")
+    operator fun set(i: Int, value: Boolean) {
+         when(i) {
+            0 -> t1 = false
+            1 -> t2 = false
+            2 -> t3 = false
+            3 -> t4 = false
+            else -> throw IllegalArgumentException("Index out of bounds")
+         }
     }
 
-     */
+
+    fun isFullOfFalse(): Boolean {
+        return !(t1 || t2 || t3 || t4)
+    }
+
+    fun hasTrue(): Boolean {
+        return !isFullOfFalse()
+    }
+
 
 }
