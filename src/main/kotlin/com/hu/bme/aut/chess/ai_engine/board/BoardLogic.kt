@@ -32,15 +32,18 @@ class BoardLogic(val board: BoardData) {
 
 
     /**
-     * This function gets all the legal steps for a piece
+     * This function gets all the legal moves for a piece
      * @param piece the piece which moves we get
-     * @return the list of legal steps
+     * @return the list of legal moves
      */
-    fun getLegalMoves(piece: Piece): MutableList<Pair<Int, Int>> {
+    fun getLegalMoves(piece: Piece, scanForCheck: Boolean = true): MutableList<Pair<Int, Int>> {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
 
         getLegalMovesInALine(piece, final)
 
+        if (scanForCheck) {
+            final.filter { !scanForCheckForMovement(piece, it) }
+        }
         //castlingCheck
 
         return final
@@ -85,10 +88,11 @@ class BoardLogic(val board: BoardData) {
 
     /**
      * Implement piece movement logic.
-     * @param move the step we want to make
-     * @param piece the piece we want to step with.
+     * @param move the move we want to make
+     * @param piece the piece we want to move with.
      *
-     * The function invokes the get
+     * The function invokes the getLegalMoves
+     * if @param move is not in the list of legal moves then nothing happens
      */
 
     fun move(piece: Piece, move: Pair<Int, Int>) {
@@ -112,8 +116,8 @@ class BoardLogic(val board: BoardData) {
             //moves the piece on the board
             board.movePiece(piece, move)
 
-            //updating the board after the step
-            //setting castling rights after a step on the board
+            //updating the board after the piece movement
+            //setting castling rights after a movement on the board
             //The king moves
             if (piece.name == PieceName.KING) {
                 when (piece.pieceColor) {
@@ -144,13 +148,16 @@ class BoardLogic(val board: BoardData) {
 
 
     /**
-     * Gives back true if the castling step is not available
+     * This function checks if the king can legally do the castling move
+     * @param piece the king which moves we check if ti can castle
+     * @param filed the position where we want to castle
+     * @return true if the castling move is not legal and return false if the move is legal
      */
 
-    fun removeInvalidCastling(piece: Piece, filedPos: Pair<Int, Int>): Boolean {
+    fun removeInvalidCastling(piece: Piece, fieldPos: Pair<Int, Int>): Boolean {
         val rights = board.castlingRights
         //QueenSide
-        if (filedPos.second == piece.j - 2) {
+        if (fieldPos.second == piece.j - 2) {
             //checks if there is a piece between the king and rook
             for (k in 1..3) {
                 //returns true if there is a piece between the king and rook
@@ -167,7 +174,7 @@ class BoardLogic(val board: BoardData) {
             }
         }
         //KingSideCastling
-        if (filedPos.second == piece.j + 2) {
+        if (fieldPos.second == piece.j + 2) {
             //checks if there is a piece between the king and rook
             for (k in 1..2) {
                 if (board.getPiece(piece.i, piece.j + k) != null) { return true }
@@ -181,4 +188,26 @@ class BoardLogic(val board: BoardData) {
         }
         return false
     }
+
+    /**
+     * This function scans if the next move would result in check for the current players king
+     * The king can't be to checked after a move because of the rules of chess
+     *
+     * @param piece the piece which movement could result in chess for its king
+     * @param pos the position where we want to move the piece
+     *
+     * @return if the king gets in check returns true
+     */
+    fun scanForCheckForMovement(piece: Piece, pos: Pair<Int, Int>): Boolean {
+        val king = board.getKing(piece.pieceColor)
+        BoardLogic(BoardData(board.fen.toString())).let { boardLogic ->
+            boardLogic.move(boardLogic.board.getPiece(piece.position), pos)
+            boardLogic.board.getPiecesByColor(piece.pieceColor.oppositeColor())
+                .forEach { piece ->
+                    if (getLegalMoves(piece, false).contains(king.position)) {return true}
+            }
+        }
+        return false
+    }
+
 }

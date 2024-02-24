@@ -182,6 +182,22 @@ class BoardData(fenString: String) {
      * if the right is false it can't be set to true again.
      */
 
+    /**
+     * This function gets the given colors king
+     * @param color the color which kings we search for
+     */
+    fun getKing(color: PieceColor): Piece {
+        for (i in 0..7) {
+            for (j in 0..7)
+                getPiece(i, j)?.let { kingCandidate->
+                    if (kingCandidate is King && kingCandidate.pieceColor == color ) {
+                        return kingCandidate
+                    }
+                }
+        }
+        throw IllegalArgumentException("There must be a king on the board")
+    }
+
 }
 
 

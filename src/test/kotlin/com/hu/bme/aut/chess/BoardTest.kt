@@ -16,6 +16,7 @@ class BoardTest {
     val whiteKingHasCastlingRightFen = "4k3/7Q/8/8/8/8/8/R3K2R w KQ - 0 1"
     val blackKingHasCastlingRightFen = "r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1"
     val noCastlingFen = "r3k2r/8/8/8/8/8/8/R3K2R b - - 0 1"
+    val checkScanForMovementFen = "8/8/8/3q4/8/1k6/3Q4/3K4 w - - 0 1"
     @BeforeEach
     fun setupBoard() {
         //boardData = BoardData().apply { newGame() }
@@ -164,6 +165,20 @@ class BoardTest {
             assert(it.board.castlingRights == Quad(false, false, false, false))
             assert(king.position == Pair(7, 6) && kingSideRook.position == Pair(7, 5))
 
+        }
+    }
+
+    /**
+     * test if the piece can't step if it king gets in to check
+     */
+    @Test
+    fun checkScanWhenMovingTest() {
+        BoardLogic(BoardData(checkScanForMovementFen))
+            .let { logic ->
+            logic.board.getPiece(6,3)
+                .let {
+                    logic.getLegalMoves(it!!, )
+            }
         }
     }
 }

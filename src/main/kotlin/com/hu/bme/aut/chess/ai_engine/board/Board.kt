@@ -276,8 +276,7 @@ class Board(var aiBoard: Boolean= false){
     }
 
     fun noStepWhenChecked(color: PieceColor): Boolean {
-        val enemysteps = getStepsforColor(color.oppositeColor())
-        enemysteps.forEach() {
+        getStepsforColor(color.oppositeColor()).forEach() {
             val tmp = getPiece(it.first, it.second)
             if (tmp.name == PieceName.KING && tmp.pieceColor == color) {
                 return true
