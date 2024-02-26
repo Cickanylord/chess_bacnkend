@@ -39,7 +39,7 @@ data class King(
         }
     }
 
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>> {
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>> {
         val steps = Array(10) { mutableListOf<Pair<Int, Int>>() }
         //normal steps
         steps[0].add(Pair(i + 1, j))

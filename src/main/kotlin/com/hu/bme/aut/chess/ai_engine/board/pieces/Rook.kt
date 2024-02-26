@@ -37,7 +37,7 @@ data class Rook(
 
     }
 
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>>{
         val steps = Array(4) { mutableListOf<Pair<Int, Int>>() }
 
         for (counter in 0 until 8) {

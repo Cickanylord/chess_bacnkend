@@ -225,7 +225,7 @@ class Board(var aiBoard: Boolean= false){
     }
 
         fun getavalibleStepsInaLine(piece: Piece, final: MutableList<Pair<Int, Int>>) {
-            val valid = piece.getValidSteps()
+            val valid = piece.getAllMoves()
 
             valid.forEach() {
                 for (i in it.indices) {

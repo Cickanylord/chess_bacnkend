@@ -2,8 +2,8 @@ package com.hu.bme.aut.chess.ai_engine.board
 
 import com.hu.bme.aut.chess.Util.Quad
 import com.hu.bme.aut.chess.ai_engine.board.pieces.*
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Bishop
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
+import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import hu.bme.aut.android.monkeychess.board.TileNew
@@ -34,7 +34,7 @@ fun main() {
 }
 
 
-class BoardData(fenString: String) {
+data class BoardData(val fenString: String) {
     var fen: Fen
     var castlingRights: Quad = Quad(true, true, true, true)
         set(rights: Quad) {
@@ -136,6 +136,7 @@ class BoardData(fenString: String) {
         pieces.forEach(){
             addPiece(it)
         }
+
     }
 
     fun flipTheTable() {
@@ -198,6 +199,33 @@ class BoardData(fenString: String) {
         throw IllegalArgumentException("There must be a king on the board")
     }
 
+    /**
+     * This function checks all the corners if there is the right rook on it
+     * this is used for checking if there is a rook in the corner
+     *
+     * t1 = white king side
+     * t2 = white queen side
+     * t3 = black king side
+     * t4 = black queen side
+     *
+     *
+     * @return returns a list containing information about the corner the firs two are withe corners and the last two are black corners
+     */
+    fun scanCorners(): Quad{
+        val listOfCorners = listOf(getPiece(7, 7), getPiece(7, 0), getPiece(0, 7), getPiece(0, 0))
+        return Quad(
+            t1 = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
+            t2 = listOfCorners[1]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
+            t3 = listOfCorners[2]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.BLACK,
+            t4 = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.BLACK
+        )
+    }
+}
+
+fun comparePieces(piece1: Piece?, piece2: Piece?): Boolean {
+    if (piece1 == null || piece2 == null) {return false}
+
+    return piece1.name == piece2.name && piece1.pieceColor == piece2.pieceColor
 }
 
 

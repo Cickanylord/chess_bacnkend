@@ -21,7 +21,7 @@ class Empty(
     override fun step(i: Int, j: Int){
     }
 
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>> {
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>> {
         TODO("Not yet implemented")
     }
 

@@ -38,7 +38,7 @@ data class Queen(
         }
 
     }
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>>{
         val steps = Array(8) { mutableListOf<Pair<Int, Int>>() }
 
 

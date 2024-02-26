@@ -10,7 +10,7 @@ import hu.bme.aut.android.monkeychess.board.pieces.*
 
 import kotlin.IllegalArgumentException
 
-class Fen(val boardData: BoardData) {
+data class Fen(val boardData: BoardData) {
     val activeColor: Char
         get() = boardData.activeColor.name[0].lowercaseChar()
 
@@ -148,5 +148,7 @@ fun castlingRights(castlingChars: String): Quad {
     if (castlingChars.contains('Q')) { rights.t2 = true }
     if (castlingChars.contains('k')) { rights.t3 = true }
     if (castlingChars.contains('q')) { rights.t4 = true }
+
+
     return rights
 }

@@ -33,7 +33,7 @@ data class Bishop(
 
     }
 
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>> {
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>> {
         val steps = Array(4) { mutableListOf<Pair<Int, Int>>() }
             for (col in 1 until 8) {
                 steps[0].add(Pair(i + col, j + col))

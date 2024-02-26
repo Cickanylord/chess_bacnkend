@@ -12,11 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BoardTest {
     lateinit var boardData: BoardData
+
+    /**
+     * the tables can be viewed on the website
+     * @link https://www.dailychess.com/chess/chess-fen-viewer.php
+     */
+
     val newBoardFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     val whiteKingHasCastlingRightFen = "4k3/7Q/8/8/8/8/8/R3K2R w KQ - 0 1"
     val blackKingHasCastlingRightFen = "r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1"
     val noCastlingFen = "r3k2r/8/8/8/8/8/8/R3K2R b - - 0 1"
     val checkScanForMovementFen = "8/8/8/3q4/8/1k6/3Q4/3K4 w - - 0 1"
+    val whiteKingInCheck = "4k3/8/8/8/Q7/8/4q3/R3K2R w KQ - 0 1"
+    val whiteCheckBlocking = "4k3/8/4q3/8/8/8/Q7/4K2R w K - 0 1"
     @BeforeEach
     fun setupBoard() {
         //boardData = BoardData().apply { newGame() }
@@ -179,6 +187,32 @@ class BoardTest {
                 .let {
                     logic.getLegalMoves(it!!, )
             }
+        }
+    }
+
+    /**
+     * test if the king can't castle when it checked
+     */
+    @Test
+    fun noCastlingWhenChecked() {
+        BoardLogic(BoardData(whiteKingInCheck)).let {
+            val king = it.board.getPiece(7,4)
+            val castlingSteps = mutableListOf(Pair(7,2), Pair(7,6))
+            assert(it.getLegalMoves(king!!).none { castlingSteps.contains(it) })
+        }
+    }
+    /**
+     * test if the pieces only get the steps which blocks checks
+     */
+    @Test
+    fun checkBlocking() {
+        BoardLogic(BoardData(whiteCheckBlocking)).let { boardLogic ->
+            val expectedSteps = mutableListOf(Pair(6,4),Pair(2,4), Pair(7,3), Pair(7,5), Pair(6,3), Pair(6,5))
+            val steps: MutableList<Pair<Int, Int>> = mutableListOf()
+            boardLogic.board.getPiecesByColor(PieceColor.WHITE).forEach() {
+                steps.addAll(boardLogic.getLegalMoves(it))
+            }
+            assert(steps.containsAll(expectedSteps) && steps.size == expectedSteps.size)
         }
     }
 }

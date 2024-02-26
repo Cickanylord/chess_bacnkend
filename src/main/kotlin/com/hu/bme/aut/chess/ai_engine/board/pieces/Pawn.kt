@@ -39,7 +39,7 @@ data class Pawn(
 
     }
 
-    override fun getValidSteps(): Array<MutableList<Pair<Int, Int>>>{
+    override fun getAllMoves(): Array<MutableList<Pair<Int, Int>>>{
         val steps = Array(3) { mutableListOf<Pair<Int, Int>>() }
 
         if (side  == Side.UP) {
