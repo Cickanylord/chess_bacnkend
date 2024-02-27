@@ -131,10 +131,12 @@ class BoardTest {
         //when king steps
         BoardLogic(BoardData(whiteKingHasCastlingRightFen)).let {
             val listOfExpectedSteps: MutableList<Pair<Int, Int>> = mutableListOf(Pair(7,3), Pair(7,4), Pair(7,5), Pair(5,3), Pair(5,4), Pair(5,5), Pair(6,5), Pair(6,3))
-            it.move(it.board.getPiece(7,4)!!, Pair(6, 4))
+            val king = it.board.getPiece(7,4)!!
+            it.move(king, Pair(6, 4))
             val selectedSteps =it.getLegalMoves(it.board.getPiece(6,4)!!)
 
             println(it.board.printBoard())
+            assert(king.position == Pair(6, 4))
             assert(it.board.castlingRights == Quad(false, false, false, false))
             assert(listOfExpectedSteps.containsAll(selectedSteps) && selectedSteps.size == listOfExpectedSteps.size)
         }

@@ -16,7 +16,7 @@ class NewAI(val aiColor: PieceColor , val boardData: BoardData) {
         return bestChoice
     }
 
-    val originalDepth = 4
+    val originalDepth = 3
     var branch: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
     var bestChoice: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
 

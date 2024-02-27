@@ -215,9 +215,9 @@ data class BoardData(val fenString: String) {
         val listOfCorners = listOf(getPiece(7, 7), getPiece(7, 0), getPiece(0, 7), getPiece(0, 0))
         return Quad(
             t1 = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
-            t2 = listOfCorners[1]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
-            t3 = listOfCorners[2]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.BLACK,
-            t4 = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.BLACK
+            t2 = listOfCorners[1]?.name == PieceName.ROOK && listOfCorners[1]?.pieceColor == PieceColor.WHITE,
+            t3 = listOfCorners[2]?.name == PieceName.ROOK && listOfCorners[2]?.pieceColor == PieceColor.BLACK,
+            t4 = listOfCorners[3]?.name == PieceName.ROOK && listOfCorners[3]?.pieceColor == PieceColor.BLACK
         )
     }
 }

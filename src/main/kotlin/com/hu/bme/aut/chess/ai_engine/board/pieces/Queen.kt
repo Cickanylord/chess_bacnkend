@@ -44,6 +44,7 @@ data class Queen(
 
         for (counter in 1 until 8){
             //diagonal
+
             steps[0].add(Pair(i + counter, j + counter))
             steps[1].add(Pair(i + counter, j - counter))
             steps[2].add(Pair(i - counter, j + counter))

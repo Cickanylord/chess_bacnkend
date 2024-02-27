@@ -23,9 +23,6 @@ data class Fen(val boardData: BoardData) {
         var emptyTile = 0
         var boardFEN = ""
 
-        if (boardData.whiteSidePosition == Side.UP){
-            boardData.flipTheTable()
-        }
 
         boardData.board.forEach { row ->
             row.forEach { tile ->

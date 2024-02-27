@@ -16,6 +16,9 @@ fun main() {
     //rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1
     //Bn2kbnr/p1p1pppp/8/3N4/2q3P1/5P2/PPPPP2P/R1BQK2R w KQkq - 0 1
 
+    //new bug castling right? 
+    //rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1
+
 
 
     val boardData = BoardData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -76,12 +79,12 @@ class BoardLogic(val board: BoardData) {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
 
         getPieceVision(piece, final)
-        removeMovesResultingInCheck(piece, final)
+        //removeMovesResultingInCheck(piece, final)
 
 
 
         return  final
-            /*
+
             .filter() { pos ->
 
                 //init new board to check if the king is in check.
@@ -101,7 +104,9 @@ class BoardLogic(val board: BoardData) {
                 !scanBoardForCheck(piece.pieceColor, tmpBoard)
         } as MutableList<Pair<Int, Int>>
 
-             */
+
+
+
     }
 
 
@@ -130,13 +135,18 @@ class BoardLogic(val board: BoardData) {
                     if (piece.name != PieceName.PAWN || currentField.second == piece.j) { final.add(currentField) }
 
 
-                    if (piece.name == PieceName.KING && (currentField.second - piece.j).absoluteValue == 2 && board.colorHasCastlingRight(piece.pieceColor)) {
+
+                    if (piece.name == PieceName.KING && (currentField.second - piece.j).absoluteValue == 2 ) {
                         //Invalid castling removing
                         //the king can't castle if it has no castling right or the king doesn't see the rook
-                        if (piece.name == PieceName.KING) {
+                        if (board.colorHasCastlingRight(piece.pieceColor)) {
                             if (removeInvalidCastling(piece, currentField)) { final.remove(currentField) }
+                        } else {
+                            final.remove(currentField)
                         }
                     }
+
+
                 }
             }
         }
@@ -183,6 +193,7 @@ class BoardLogic(val board: BoardData) {
                 }
             }
 
+            //Check if the corners have the original rook
             val corners = board.scanCorners()
             for (i in 0..3) {
                 when (i) {

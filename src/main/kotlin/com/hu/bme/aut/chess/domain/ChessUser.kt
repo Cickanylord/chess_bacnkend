@@ -12,7 +12,13 @@ class ChessUser(
     @GeneratedValue
     //@Column(name="userId")
     private val id: Long?=null
+
+    //TODO oneToMany
+
+    
 ){
+
+
     fun getname():String{
         return name
     }

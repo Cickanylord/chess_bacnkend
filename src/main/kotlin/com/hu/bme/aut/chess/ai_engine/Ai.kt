@@ -8,7 +8,7 @@ import hu.bme.aut.android.monkeychess.board.Board
 
 class Ai(var board: Board, color: PieceColor) {
 
-    val originalDepth = 3
+    val originalDepth = 2
     var branch: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
     var bestChoice: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
 

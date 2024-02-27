@@ -11,7 +11,7 @@ class Match(
     @GeneratedValue
     val matchId: Long? = null,
 
-
+    //TODO make this atomic
     @JoinTable(
         name = "players",
         joinColumns =  [JoinColumn( name = "match_id")],
