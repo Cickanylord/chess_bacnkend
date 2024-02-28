@@ -1,5 +1,8 @@
-package com.hu.bme.aut.chess.ai_engine.board.pieces.enums
+package hu.bme.aut.android.monkeychess.board.pieces
 
+import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
+import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
+import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 
 
@@ -25,7 +28,7 @@ data class Bishop(
         j = 7 - j
         this.position = Pair(i,j)
 
-        side = if(side==Side.DOWN) {
+        side = if(side== Side.DOWN) {
             Side.UP
         } else {
             Side.DOWN

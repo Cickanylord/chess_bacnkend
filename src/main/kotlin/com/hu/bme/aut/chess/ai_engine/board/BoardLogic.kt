@@ -1,7 +1,7 @@
 package com.hu.bme.aut.chess.ai_engine.board
 
-import com.hu.bme.aut.chess.Util.Quad
-import com.hu.bme.aut.chess.ai_engine.board.pieces.castlingRights
+
+import com.hu.bme.aut.chess.Util.CastlingRights
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
@@ -19,9 +19,12 @@ fun main() {
     //new bug castling right? 
     //rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1
 
+    //EMPTY PIECE WTF?????
+    //8/p4Rpr/4k3/1R1Q4/4p1p1/8/P1PPP1K1/2B5 w - - 0 1
 
 
-    val boardData = BoardData("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    val boardData = BoardData("rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1")
     val board = BoardLogic(boardData)
    // println(boardData.fen)
     //println(boardData.printBoard())
@@ -34,7 +37,7 @@ fun main() {
 
 
 
-    var color = PieceColor.WHITE
+    var color = PieceColor.BLACK
 
     while (true) {
         val ai = NewAI(color ,boardData)
@@ -187,56 +190,17 @@ class BoardLogic(val board: BoardData) {
             //The king moves
             if (piece.name == PieceName.KING) {
                 when (piece.pieceColor) {
-                    PieceColor.WHITE -> { board.castlingRights = Quad(false, false, true, true) }
-                    PieceColor.BLACK -> { board.castlingRights = Quad(true, true, false, false) }
-                    else -> throw  IllegalArgumentException("no such color")
+                    PieceColor.WHITE -> {
+                        board.castlingRights = CastlingRights(false, false, true, true)
+                    }
+
+                    PieceColor.BLACK -> {
+                        board.castlingRights = CastlingRights(true, true, false, false)
+                    }
+
+                    else -> throw IllegalArgumentException("no such color")
                 }
             }
-
-            //Check if the corners have the original rook
-            val corners = board.scanCorners()
-            for (i in 0..3) {
-                when (i) {
-                    0 -> {
-                        if(!corners[i]) {
-                            board.castlingRights[0] = false
-                        }
-                    }
-                    1 -> {
-                        if(!corners[i]) {
-                            board.castlingRights[1] = false
-                        }
-                    }
-                    2 -> {
-                        if(!corners[i]) {
-                            board.castlingRights[2] = false
-                        }
-                    }
-                    3 -> {
-                        if(!corners[i]) {
-                            board.castlingRights[3] = false
-                        }
-                    }
-                }
-            }
-
-            //Rook moves
-            if (piece.name == PieceName.ROOK) {
-                when(piece.j) {
-                    //QueenSide
-                    0 -> {
-                        if (piece.pieceColor == PieceColor.WHITE) { board.castlingRights[1] = false }
-                        else { board.castlingRights[3] = false }
-                    }
-                    //KingSide
-                    7 -> {
-                        if (piece.pieceColor == PieceColor.WHITE) { board.castlingRights[0] = false }
-                        else { board.castlingRights[2] = false }
-                    }
-                    else -> {}
-                }
-            }
-
         }
     }
 
@@ -263,8 +227,8 @@ class BoardLogic(val board: BoardData) {
             }
             //checks for castling right
             return when (piece.pieceColor) {
-                PieceColor.WHITE -> { rights.t2.not() }
-                PieceColor.BLACK -> { rights.t4.not() }
+                PieceColor.WHITE -> { rights.qw.not() }
+                PieceColor.BLACK -> { rights.qb.not() }
                 else -> throw IllegalArgumentException("no such color")
             }
         }
@@ -276,8 +240,8 @@ class BoardLogic(val board: BoardData) {
             }
             //checks for castling rights
             return when(piece.pieceColor) {
-                PieceColor.WHITE -> { rights.t1.not() }
-                PieceColor.BLACK -> { rights.t3.not() }
+                PieceColor.WHITE -> { rights.kw.not() }
+                PieceColor.BLACK -> { rights.kb.not() }
                 else -> throw IllegalArgumentException("no such color")
             }
         }

@@ -1,16 +1,18 @@
 package com.hu.bme.aut.chess
 
 
-import com.hu.bme.aut.chess.Util.Util.fromGsonToList
+
 import com.hu.bme.aut.chess.controller.match.MatchRequest
 import com.hu.bme.aut.chess.controller.match.StepRequest
 import com.hu.bme.aut.chess.controller.message.MessageBody
 import com.hu.bme.aut.chess.domain.ChessUser
 import com.hu.bme.aut.chess.domain.Match
 import com.hu.bme.aut.chess.domain.Message
+import com.hu.bme.aut.chess.hulladek.fromGsonToList
 import com.hu.bme.aut.chess.repository.match.MatchService
 import com.hu.bme.aut.chess.repository.message.MessageService
 import com.hu.bme.aut.chess.repository.user.UserService
+
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired

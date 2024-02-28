@@ -2,7 +2,6 @@ package hu.bme.aut.android.monkeychess.board
 
 
 import com.hu.bme.aut.chess.ai_engine.Ai
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Bishop
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side

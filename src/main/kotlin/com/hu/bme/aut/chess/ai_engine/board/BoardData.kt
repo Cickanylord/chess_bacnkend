@@ -1,10 +1,14 @@
 package com.hu.bme.aut.chess.ai_engine.board
 
-import com.hu.bme.aut.chess.Util.Quad
+
+import com.hu.bme.aut.chess.Util.CastlingRights
 import com.hu.bme.aut.chess.ai_engine.board.pieces.*
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
+import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.activeColor
+import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.castlingRights
+import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.piecePlacement
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import hu.bme.aut.android.monkeychess.board.TileNew
 import hu.bme.aut.android.monkeychess.board.pieces.*
@@ -36,8 +40,8 @@ fun main() {
 
 data class BoardData(val fenString: String) {
     var fen: Fen
-    var castlingRights: Quad = Quad(true, true, true, true)
-        set(rights: Quad) {
+    var castlingRights: CastlingRights = CastlingRights(true, true, true, true)
+        set(rights: CastlingRights) {
             for (i in 0..3) {
                 if (!castlingRights[i]) {
                     rights[i] = false
@@ -55,9 +59,9 @@ data class BoardData(val fenString: String) {
     val numColumns = 8
 
     val whiteHasCastlingRight
-        get() = (castlingRights.t1 || castlingRights.t2)
+        get() = (castlingRights.kw || castlingRights.qw)
     val blackHasCastlingRight
-        get() = (castlingRights.t3 || castlingRights.t4)
+        get() = (castlingRights.kw || castlingRights.qw)
 
     var board: Array<Array<TileNew>> = arrayOf(arrayOf())
 
@@ -69,6 +73,7 @@ data class BoardData(val fenString: String) {
                 TileNew(false, null)
             }
         }
+
 
         loadBoard(piecePlacement(splitFen[0]))
         activeColor = activeColor(splitFen[1])
@@ -113,6 +118,9 @@ data class BoardData(val fenString: String) {
 
             //changes the piece position
             it.step(pos.first, pos.second)
+
+            //if rook is captured or moved revoke castling right
+            revokeCastlingRightIfRookAbsent(scanCorners())
         }
     }
 
@@ -136,7 +144,8 @@ data class BoardData(val fenString: String) {
         pieces.forEach(){
             addPiece(it)
         }
-
+        //scan the corners if whether the rook is absent
+        revokeCastlingRightIfRookAbsent(scanCorners())
     }
 
     fun flipTheTable() {
@@ -167,11 +176,11 @@ data class BoardData(val fenString: String) {
     fun colorHasCastlingRight(color: PieceColor): Boolean {
         return when(color) {
             PieceColor.WHITE -> {
-                (castlingRights.t1 || castlingRights.t2)
+                (castlingRights.kw || castlingRights.qw)
             }
 
             PieceColor.BLACK -> {
-                (castlingRights.t3 || castlingRights.t4)
+                (castlingRights.kb || castlingRights.qb)
             }
 
             else -> throw IllegalArgumentException("there is no such color $color")
@@ -203,22 +212,34 @@ data class BoardData(val fenString: String) {
      * This function checks all the corners if there is the right rook on it
      * this is used for checking if there is a rook in the corner
      *
-     * t1 = white king side
-     * t2 = white queen side
-     * t3 = black king side
-     * t4 = black queen side
+     * kw = white king side
+     * qw = white queen side
+     * kb = black king side
+     * qb = black queen side
      *
      *
      * @return returns a list containing information about the corner the firs two are withe corners and the last two are black corners
      */
-    fun scanCorners(): Quad{
+    fun scanCorners(): CastlingRights{
         val listOfCorners = listOf(getPiece(7, 7), getPiece(7, 0), getPiece(0, 7), getPiece(0, 0))
-        return Quad(
-            t1 = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
-            t2 = listOfCorners[1]?.name == PieceName.ROOK && listOfCorners[1]?.pieceColor == PieceColor.WHITE,
-            t3 = listOfCorners[2]?.name == PieceName.ROOK && listOfCorners[2]?.pieceColor == PieceColor.BLACK,
-            t4 = listOfCorners[3]?.name == PieceName.ROOK && listOfCorners[3]?.pieceColor == PieceColor.BLACK
+        return CastlingRights(
+            //white king side rook
+            kw = listOfCorners[0]?.name == PieceName.ROOK && listOfCorners[0]?.pieceColor == PieceColor.WHITE,
+            //white queen side rook
+            qw = listOfCorners[1]?.name == PieceName.ROOK && listOfCorners[1]?.pieceColor == PieceColor.WHITE,
+            //black king side rook
+            kb = listOfCorners[2]?.name == PieceName.ROOK && listOfCorners[2]?.pieceColor == PieceColor.BLACK,
+            //black queen side rook
+            qb = listOfCorners[3]?.name == PieceName.ROOK && listOfCorners[3]?.pieceColor == PieceColor.BLACK
         )
+    }
+
+    fun revokeCastlingRightIfRookAbsent(corners: CastlingRights) {
+        for (i in 0..3) {
+            if (!corners[i]) {
+                castlingRights[i] = false
+            }
+        }
     }
 }
 

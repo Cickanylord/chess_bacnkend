@@ -1,9 +1,11 @@
 package com.hu.bme.aut.chess
 
-import com.hu.bme.aut.chess.Util.Quad
+
+import com.hu.bme.aut.chess.Util.CastlingRights
 import com.hu.bme.aut.chess.ai_engine.board.BoardData
 import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
+
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -25,6 +27,7 @@ class BoardTest {
     val checkScanForMovementFen = "8/8/8/3q4/8/1k6/3Q4/3K4 w - - 0 1"
     val whiteKingInCheck = "4k3/8/8/8/Q7/8/4q3/R3K2R w KQ - 0 1"
     val whiteCheckBlocking = "4k3/8/4q3/8/8/8/Q7/4K2R w K - 0 1"
+    val rookCapture = "rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1"
     @BeforeEach
     fun setupBoard() {
         //boardData = BoardData().apply { newGame() }
@@ -52,6 +55,12 @@ class BoardTest {
         //EN-Passant
 
     }
+    /**
+     * Tets if invalid FEN string are sorted
+     */
+    fun invalidFen() {
+        assert(false)
+    }
 
     /**
      * test castling reading
@@ -59,13 +68,13 @@ class BoardTest {
     @Test
     fun readCastling() {
         //no one has castling
-        assert( BoardData(noCastlingFen).castlingRights == Quad(false,false,false,false))
+        assert( BoardData(noCastlingFen).castlingRights == CastlingRights(false,false,false,false))
         //white has castling
-        assert( BoardData(whiteKingHasCastlingRightFen).castlingRights == Quad(true,true,false,false))
+        assert( BoardData(whiteKingHasCastlingRightFen).castlingRights == CastlingRights(true,true,false,false))
         //black has castling
-        assert( BoardData(blackKingHasCastlingRightFen).castlingRights == Quad(false,false,true,true))
+        assert( BoardData(blackKingHasCastlingRightFen).castlingRights == CastlingRights(false,false,true,true))
         //every player has castling
-        assert( BoardData(newBoardFen).castlingRights == Quad(true,true,true,true))
+        assert( BoardData(newBoardFen).castlingRights == CastlingRights(true,true,true,true))
     }
 
     @Test
@@ -104,7 +113,7 @@ class BoardTest {
             var selectedSteps =it.getLegalMoves(it.board.getPiece(7,4)!!)
 
             assert(listOfExpectedSteps.containsAll(selectedSteps) && selectedSteps.size == listOfExpectedSteps.size)
-            assert(it.board.castlingRights == Quad(true, true, false, false))
+            assert(it.board.castlingRights == CastlingRights(true, true, false, false))
 
             //when queen side rook steps
             listOfExpectedSteps.remove(Pair(7,2))
@@ -112,7 +121,7 @@ class BoardTest {
             selectedSteps =it.getLegalMoves(it.board.getPiece(7,4)!!)
 
             assert(listOfExpectedSteps.containsAll(selectedSteps) && selectedSteps.size == listOfExpectedSteps.size)
-            assert(it.board.castlingRights == Quad(true, false, false, false))
+            assert(it.board.castlingRights == CastlingRights(true, false, false, false))
 
             //when king side rook steps
             listOfExpectedSteps.remove(Pair(7,6))
@@ -120,7 +129,7 @@ class BoardTest {
             selectedSteps =it.getLegalMoves(it.board.getPiece(7,4)!!)
 
             assert(listOfExpectedSteps.containsAll(selectedSteps) && selectedSteps.size == listOfExpectedSteps.size)
-            assert(it.board.castlingRights == Quad(false, false, false, false))
+            assert(it.board.castlingRights == CastlingRights(false, false, false, false))
         }
     }
     /**
@@ -137,7 +146,7 @@ class BoardTest {
 
             println(it.board.printBoard())
             assert(king.position == Pair(6, 4))
-            assert(it.board.castlingRights == Quad(false, false, false, false))
+            assert(it.board.castlingRights == CastlingRights(false, false, false, false))
             assert(listOfExpectedSteps.containsAll(selectedSteps) && selectedSteps.size == listOfExpectedSteps.size)
         }
     }
@@ -154,7 +163,7 @@ class BoardTest {
 
             it.move(it.board.getPiece(7,4)!!, Pair(7, 2))
 
-            assert(it.board.castlingRights == Quad(false, false, false, false))
+            assert(it.board.castlingRights == CastlingRights(false, false, false, false))
             assert(king.position == Pair(7, 2) && queenSideRook.position == Pair(7, 3))
 
         }
@@ -172,7 +181,7 @@ class BoardTest {
 
             it.move(it.board.getPiece(7,4)!!, Pair(7, 6))
 
-            assert(it.board.castlingRights == Quad(false, false, false, false))
+            assert(it.board.castlingRights == CastlingRights(false, false, false, false))
             assert(king.position == Pair(7, 6) && kingSideRook.position == Pair(7, 5))
 
         }
@@ -217,4 +226,17 @@ class BoardTest {
             assert(steps.containsAll(expectedSteps) && steps.size == expectedSteps.size)
         }
     }
+
+    /**
+     * Tets to check if the rook is taken the castling rights are revoked
+     */
+    @Test
+    fun rookCapture() {
+        BoardLogic(BoardData(rookCapture)).let { boardLogic ->
+            val bishop = boardLogic.board.getPiece(1,1)!!
+            boardLogic.move(bishop, Pair(0,0))
+            assert(boardLogic.board.castlingRights == CastlingRights(true, true, true, false))
+        }
+    }
+
 }
