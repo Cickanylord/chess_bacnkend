@@ -1,9 +1,10 @@
-package com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface
+package com.hu.bme.aut.chess.ai_engine.board.FEN
 
 
 import com.hu.bme.aut.chess.Util.CastlingRights
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
+import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import hu.bme.aut.android.monkeychess.board.pieces.*
 
 /**

@@ -7,7 +7,7 @@ import com.hu.bme.aut.chess.domain.Message
 import com.hu.bme.aut.chess.repository.match.MatchService
 import com.hu.bme.aut.chess.repository.message.MessageService
 import com.hu.bme.aut.chess.repository.user.UserService
-import hu.bme.aut.android.monkeychess.board.Board
+import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,8 +33,8 @@ class ChessApplicationTests @Autowired constructor(
 		user = ChessUser("János")
 		user2 = ChessUser("másik János")
 		user3 = ChessUser("Hamrmadik János")
-		match = Match(players = listOf(user, user2), board = Board("").createFEN() )
-		match2 =Match(players = listOf(user, user3), board = Board("").createFEN() )
+		match = Match(players = listOf(user, user2), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+		match2 =Match(players = listOf(user, user3), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 	}
 	@BeforeEach
 	fun setupDB() {

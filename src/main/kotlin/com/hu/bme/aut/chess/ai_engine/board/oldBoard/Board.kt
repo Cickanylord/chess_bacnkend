@@ -1,15 +1,9 @@
-package hu.bme.aut.android.monkeychess.board
+package com.hu.bme.aut.chess.ai_engine.board.oldBoard
 
 
-import com.hu.bme.aut.chess.ai_engine.Ai
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
-import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
-import hu.bme.aut.android.monkeychess.board.pieces.*
-
-
+@Deprecated("boardData")
 class Board(var aiBoard: Boolean= false){
+    /*
 
     var board = mutableListOf<MutableList<Tile>>()
     var currentPlayerBoard: PieceColor = PieceColor.EMPTY
@@ -912,4 +906,6 @@ class Board(var aiBoard: Boolean= false){
 
         return if (castlingFen.isEmpty()) "-" else castlingFen
     }
+
+     */
 }

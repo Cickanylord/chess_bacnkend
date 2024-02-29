@@ -1,13 +1,14 @@
 package com.hu.bme.aut.chess.repository.match
 
+import com.hu.bme.aut.chess.ai_engine.board.BoardData
+import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
 import com.hu.bme.aut.chess.controller.match.StepRequest
 import com.hu.bme.aut.chess.domain.ChessUser
 import com.hu.bme.aut.chess.domain.Match
-import hu.bme.aut.android.monkeychess.board.Board
+import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -48,16 +49,16 @@ class MatchService @Autowired constructor(private val matchRepository: MatchRepo
         }
 
         var valid = false
-        val board = Board(fenBoard = step.prevBoard)
+        val board = BoardData(step.prevBoard)
 
-        board.getPiecesbyColor(board.currentPlayerBoard).forEach {
+        board.getPiecesByColor(board.activeColor).forEach {
             val piece = it
-            board.getAvailableSteps(piece, piece.pieceColor, true ).forEach {
-                val tmpBoard = Board(fenBoard = step.prevBoard)
+            BoardLogic(board).getLegalMoves(piece).forEach {
+                val tmpBoard = BoardData(step.prevBoard)
                 val tmpPiece = tmpBoard.getPiece(piece.i, piece.j)
-                tmpBoard.step(tmpPiece, it.first, it.second)
-                println(tmpBoard.createFEN())
-                if (step.board == tmpBoard.createFEN()) {
+                tmpBoard.movePiece(tmpPiece, it)
+                println(tmpBoard.fen)
+                if (step.board == tmpBoard.fen.toString()) {
                     valid = true
                 }
             }

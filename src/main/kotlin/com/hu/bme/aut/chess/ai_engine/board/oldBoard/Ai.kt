@@ -1,13 +1,13 @@
-package com.hu.bme.aut.chess.ai_engine
+package com.hu.bme.aut.chess.ai_engine.board.oldBoard
 
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
-import hu.bme.aut.android.monkeychess.board.pieces.Empty
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
-import hu.bme.aut.android.monkeychess.board.Board
-
+import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
+@Deprecated("newAI")
 class Ai(var board: Board, color: PieceColor) {
 
+    /*
     val originalDepth = 2
     var branch: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
     var bestChoice: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
@@ -263,4 +263,6 @@ class Ai(var board: Board, color: PieceColor) {
         value -= getNumberOfSteps(board, aiColor.oppositeColor())
         return value
     }
+
+     */
 }

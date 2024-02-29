@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.ai_engine.board.pieces
+package com.hu.bme.aut.chess.ai_engine.board.FEN
 
 import com.hu.bme.aut.chess.ai_engine.board.BoardData
 

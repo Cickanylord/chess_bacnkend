@@ -132,7 +132,7 @@ class ControllerTest @Autowired constructor(
 
     @Test
     fun aiStep(){
-        val nextStep = client.getForEntity<String>(URI("http://localhost:$randomServerPort/api/chess/ai/rnbqkbnr.pppp1ppp.4p3.8.8.4P3.PPPP1PPP.RNBQKBNRK_w_KQkq"))
+        val nextStep = client.getForEntity<String>(URI("http://localhost:$randomServerPort/api/chess/ai/rnbqkbnr.pppp1ppp.4p3.8.8.4P3.PPPP1PPP.RNBQKBNR_w_KQkq"))
         assert(nextStep.statusCode == HttpStatus.OK)
     }
 

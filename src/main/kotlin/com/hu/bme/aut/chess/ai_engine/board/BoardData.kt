@@ -2,13 +2,12 @@ package com.hu.bme.aut.chess.ai_engine.board
 
 
 import com.hu.bme.aut.chess.Util.CastlingRights
-import com.hu.bme.aut.chess.ai_engine.board.pieces.*
+import com.hu.bme.aut.chess.ai_engine.board.FEN.Fen
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.Side
-import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.activeColor
-import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.castlingRights
-import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.FenParser.piecePlacement
+import com.hu.bme.aut.chess.ai_engine.board.FEN.FenParser.activeColor
+import com.hu.bme.aut.chess.ai_engine.board.FEN.FenParser.castlingRights
+import com.hu.bme.aut.chess.ai_engine.board.FEN.FenParser.piecePlacement
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import hu.bme.aut.android.monkeychess.board.TileNew
 import hu.bme.aut.android.monkeychess.board.pieces.*
@@ -38,8 +37,18 @@ fun main() {
 }
 
 
+/**
+ * this class represents the state of the board and provides methods to manipulate the board
+ *
+ * @param fenString the fen string representation of the board
+ * @author Waldmann Tamás(EO229S)
+ */
+
 data class BoardData(val fenString: String) {
+    /** the fen generator for the Board*/
     var fen: Fen
+
+    /** stores the castling rights. After initialization the castling right cannot be given back(can't set it true) */
     var castlingRights: CastlingRights = CastlingRights(true, true, true, true)
         set(rights: CastlingRights) {
             for (i in 0..3) {
@@ -50,31 +59,30 @@ data class BoardData(val fenString: String) {
             field = rights
         }
 
-    var whiteSidePosition = Side.DOWN
-    var BlackSidePosition = Side.UP
+    /** the current player which can move */
     var activeColor: PieceColor
+    /** shows if castling is available on the board */
     var castlingAvailable: Boolean //castlingRights.isFullOfFalse().not()
 
+    /** the number of row and columns on the chess board */
     val numRows = 8
     val numColumns = 8
 
-    val whiteHasCastlingRight
-        get() = (castlingRights.kw || castlingRights.qw)
-    val blackHasCastlingRight
-        get() = (castlingRights.kw || castlingRights.qw)
-
+    /** The board which stores the game data in a 2D array */
     var board: Array<Array<TileNew>> = arrayOf(arrayOf())
 
+    /** This function initialize the board from the fen string given*/
     init {
         val splitFen = fenString.split(" ")
 
+        // Creating the board
         board = Array(numRows) { row ->
             Array(numColumns) { column ->
                 TileNew(false, null)
             }
         }
 
-
+        //loading the data from fen to the board
         loadBoard(piecePlacement(splitFen[0]))
         activeColor = activeColor(splitFen[1])
         castlingRights = castlingRights(splitFen[2])
@@ -82,14 +90,26 @@ data class BoardData(val fenString: String) {
         fen = Fen(this)
     }
 
+    /**
+     * This function removes all the pieces from the board
+     */
+
     fun cleanTheBoard() {
         getAllPieces().forEach() { removePiece(it) }
     }
 
+    /**
+     * This function returns a specific colors pieces
+     * @param color the color which pieces we want to get.
+     * @return a list of pieces from a specific color.
+     */
     fun getPiecesByColor(color: PieceColor): List<Piece> {
         return getAllPieces().filter { it.pieceColor == color }
     }
 
+    /**
+     * This function gets all the pieces on the board
+     */
     fun getAllPieces(): MutableList<Piece> {
         val listOfPieces = mutableListOf<Piece>()
         board.forEach {
@@ -100,15 +120,32 @@ data class BoardData(val fenString: String) {
         return listOfPieces
     }
 
-
+    /**
+     * This function gets a piece from a specific position
+     * @param row the row from we want the piece
+     * @param col the column where we want the piece
+     * @return gets the piece from the position if the position empty then returns null
+     */
     fun getPiece(row: Int, col: Int): Piece? {
         return board[row][col].piece
     }
 
+    /**
+     * This function gets a piece from a specific position
+     * @param pos the position of the piece
+     * @return gets the piece from the position if the position empty then returns null
+     */
     fun getPiece(pos: Pair<Int, Int>): Piece {
         val piece = board[pos.first][pos.second].piece
         return piece!!
     }
+
+    /**
+     * This function moves the pieces on the board. first it removes the piece from its old position then it puts it on the new position.
+     * if the piece is null then nothing happens.
+     * @param piece the piece we want to move
+     * @param pos the position where we want to move the piece
+     */
     fun movePiece(piece: Piece?, pos: Pair<Int, Int>) {
         //add piece
         board[pos.first][pos.second].piece = piece
@@ -124,14 +161,12 @@ data class BoardData(val fenString: String) {
         }
     }
 
+    // TODO decide if we need this
     /**
      * after the pieces are loaded in this function adds the pieces to their place on the board.
      */
     fun addPiece(piece: Piece) {
         board[piece.i][piece.j] = TileNew(false, piece)
-    }
-    fun removePiece(i: Int, j: Int) {
-        board[i][j] = TileNew(false, null)
     }
 
     fun removePiece(piece: Piece) {
@@ -148,31 +183,12 @@ data class BoardData(val fenString: String) {
         revokeCastlingRightIfRookAbsent(scanCorners())
     }
 
-    fun flipTheTable() {
-        whiteSidePosition = whiteSidePosition.oppositeSide()
-        BlackSidePosition = BlackSidePosition.oppositeSide()
 
-        getAllPieces().forEach() { it.flip() }
-        loadBoard(getAllPieces())
-    }
-
-    /*
-        Debug
-    */
-
-
-    fun printBoard(): String {
-        var boardString = ""
-
-        board.forEach {
-            it.forEach() { tile ->
-                boardString += tile.piece?.letter ?: if(!tile.free) {"-"} else {"X"}
-            }
-            boardString += "\n"
-        }
-        return boardString
-    }
-
+    /**
+     * this function gives back if a specific color has castling right
+     * @param color the pieceColor which we want to know if it can still castle
+     * @return returns true if the color still has castling right
+     */
     fun colorHasCastlingRight(color: PieceColor): Boolean {
         return when(color) {
             PieceColor.WHITE -> {
@@ -234,6 +250,10 @@ data class BoardData(val fenString: String) {
         )
     }
 
+    /**
+     * This function revokes castling right if the rooks are absent
+     * @param corners the corners state
+     */
     fun revokeCastlingRightIfRookAbsent(corners: CastlingRights) {
         for (i in 0..3) {
             if (!corners[i]) {
@@ -241,14 +261,24 @@ data class BoardData(val fenString: String) {
             }
         }
     }
+
+    /**
+     * This function helps in debug. gives a graphical representation of the board.
+     * @return the graphical representation of the board.
+     */
+
+    fun printBoard(): String {
+        var boardString = ""
+
+        board.forEach {
+            it.forEach() { tile ->
+                boardString += tile.piece?.letter ?: if(!tile.free) {"-"} else {"X"}
+            }
+            boardString += "\n"
+        }
+        return boardString
+    }
 }
-
-fun comparePieces(piece1: Piece?, piece2: Piece?): Boolean {
-    if (piece1 == null || piece2 == null) {return false}
-
-    return piece1.name == piece2.name && piece1.pieceColor == piece2.pieceColor
-}
-
 
 fun cordinate(){
     var string = ""

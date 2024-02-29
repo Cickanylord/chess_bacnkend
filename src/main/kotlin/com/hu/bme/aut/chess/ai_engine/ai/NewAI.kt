@@ -1,24 +1,25 @@
-package com.hu.bme.aut.chess.ai_engine.board
+package com.hu.bme.aut.chess.ai_engine.ai
 
+import com.hu.bme.aut.chess.ai_engine.board.BoardData
+import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
-import hu.bme.aut.android.monkeychess.board.pieces.Empty
 import kotlin.math.max
 import kotlin.math.min
 
 class NewAI(val aiColor: PieceColor , val boardData: BoardData) {
 
 
-    fun getTheNextStep(): Pair<Piece, Pair<Int, Int>> {
+    fun getTheNextStep(): Pair<Piece?, Pair<Int, Int>> {
         minMax(boardData, originalDepth, true, -6000000, 7000000)
 
         return bestChoice
     }
 
     val originalDepth = 3
-    var branch: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
-    var bestChoice: Pair<Piece, Pair<Int, Int>> = Pair(Empty(-1, -1), Pair(-1, -1))
+    var branch: Pair<Piece?, Pair<Int, Int>> = Pair(null, Pair(-1, -1))
+    var bestChoice: Pair<Piece?, Pair<Int, Int>> = Pair(null, Pair(-1, -1))
 
     fun minMax(
         boardData: BoardData,

@@ -2,6 +2,7 @@ package com.hu.bme.aut.chess.ai_engine.board
 
 
 import com.hu.bme.aut.chess.Util.CastlingRights
+import com.hu.bme.aut.chess.ai_engine.ai.NewAI
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
@@ -164,44 +165,52 @@ class BoardLogic(val board: BoardData) {
      * if @param move is not in the list of legal moves then nothing happens
      */
 
-    fun move(piece: Piece, move: Pair<Int, Int>) {
-        val moves = getLegalMoves(piece)
-        if (moves.contains(move)) {
-            //TODO EN-PASSANT
+    fun move(piece: Piece?, move: Pair<Int, Int>) {
+        if(piece != null) {
+            val moves = getLegalMoves(piece)
+            if (moves.contains(move)) {
+                //TODO EN-PASSANT
 
-            //Moving the rook when castling
-            if (piece.name == PieceName.KING) {
-                val i = if(piece.pieceColor == PieceColor.WHITE) { 7 } else { 0 }
-
-                //Castles KingSide rook
-                if (move.second - piece.j == 2) {
-                    board.movePiece(board.getPiece(i,7), Pair(i, 5))
-                }
-                //Castles QueenSide rook
-                if (move.second - piece.j == -2) {
-                    board.movePiece(board.getPiece(i,0), Pair(i, 3))
-                }
-            }
-            //moves the piece on the board
-            board.movePiece(piece, move)
-
-            //updating the board after the piece movement
-            //setting castling rights after a movement on the board
-            //The king moves
-            if (piece.name == PieceName.KING) {
-                when (piece.pieceColor) {
-                    PieceColor.WHITE -> {
-                        board.castlingRights = CastlingRights(false, false, true, true)
+                //Moving the rook when castling
+                if (piece.name == PieceName.KING) {
+                    val i = if (piece.pieceColor == PieceColor.WHITE) {
+                        7
+                    } else {
+                        0
                     }
 
-                    PieceColor.BLACK -> {
-                        board.castlingRights = CastlingRights(true, true, false, false)
+                    //Castles KingSide rook
+                    if (move.second - piece.j == 2) {
+                        board.movePiece(board.getPiece(i, 7), Pair(i, 5))
                     }
+                    //Castles QueenSide rook
+                    if (move.second - piece.j == -2) {
+                        board.movePiece(board.getPiece(i, 0), Pair(i, 3))
+                    }
+                }
+                //moves the piece on the board
+                board.movePiece(piece, move)
+                board.activeColor = board.activeColor.oppositeColor()
 
-                    else -> throw IllegalArgumentException("no such color")
+                //updating the board after the piece movement
+                //setting castling rights after a movement on the board
+                //The king moves
+                if (piece.name == PieceName.KING) {
+                    when (piece.pieceColor) {
+                        PieceColor.WHITE -> {
+                            board.castlingRights = CastlingRights(false, false, true, true)
+                        }
+
+                        PieceColor.BLACK -> {
+                            board.castlingRights = CastlingRights(true, true, false, false)
+                        }
+
+                        else -> throw IllegalArgumentException("no such color")
+                    }
                 }
             }
         }
+
     }
 
 

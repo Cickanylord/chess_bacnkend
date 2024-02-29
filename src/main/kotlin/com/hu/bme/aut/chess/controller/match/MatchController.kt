@@ -1,10 +1,10 @@
 package com.hu.bme.aut.chess.controller.match
 
-import com.hu.bme.aut.chess.domain.ChessUser
+import com.hu.bme.aut.chess.ai_engine.board.BoardData
 import com.hu.bme.aut.chess.domain.Match
 import com.hu.bme.aut.chess.repository.match.MatchService
 import com.hu.bme.aut.chess.repository.user.UserService
-import hu.bme.aut.android.monkeychess.board.Board
+import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -27,7 +27,7 @@ class MatchController @Autowired constructor(
             val user2 = userService.getUserByID(matchReq.playerTwo)
             when {
                 user != null && user2 != null -> {
-                    val match = Match(players = listOf(user, user2), board = Board("").createFEN())
+                    val match = Match(players = listOf(user, user2), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
                     matchService.save(match)
                     return ResponseEntity.ok(match)
                 }
