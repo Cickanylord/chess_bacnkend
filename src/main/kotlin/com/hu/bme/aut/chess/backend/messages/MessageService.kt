@@ -1,15 +1,12 @@
-package com.hu.bme.aut.chess.repository.message
+package com.hu.bme.aut.chess.backend.messages
 
 
 
-import com.hu.bme.aut.chess.domain.Match
-import com.hu.bme.aut.chess.domain.Message
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.sound.midi.MidiDeviceReceiver
 
 @Service
 class MessageService  @Autowired constructor(private val messageRepository: MessageRepository) {

@@ -2,16 +2,15 @@ package com.hu.bme.aut.chess
 
 
 
-import com.hu.bme.aut.chess.controller.match.MatchRequest
-import com.hu.bme.aut.chess.controller.match.StepRequest
-import com.hu.bme.aut.chess.controller.message.MessageBody
-import com.hu.bme.aut.chess.domain.ChessUser
-import com.hu.bme.aut.chess.domain.Match
-import com.hu.bme.aut.chess.domain.Message
+import com.hu.bme.aut.chess.backend.controller.match.MatchRequest
+import com.hu.bme.aut.chess.backend.controller.match.StepRequest
+import com.hu.bme.aut.chess.backend.messages.MessageBody
+import com.hu.bme.aut.chess.backend.users.User
+import com.hu.bme.aut.chess.backend.domain.Match
+import com.hu.bme.aut.chess.backend.messages.Message
 import com.hu.bme.aut.chess.hulladek.fromGsonToList
-import com.hu.bme.aut.chess.repository.match.MatchService
-import com.hu.bme.aut.chess.repository.message.MessageService
-import com.hu.bme.aut.chess.repository.user.UserService
+import com.hu.bme.aut.chess.backend.messages.MessageService
+import com.hu.bme.aut.chess.backend.repository.user.UserService
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -34,12 +33,12 @@ import java.net.URI
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ControllerTest @Autowired constructor(
-    val client: TestRestTemplate,
-    private val userService: UserService,
-    private val matchService: MatchService,
-    private val messageService: MessageService
+        val client: TestRestTemplate,
+        private val userService: UserService,
+        private val matchService: MatchService,
+        private val messageService: MessageService
 ){
-    val listOfUser  = listOf(ChessUser("Bob"), ChessUser("Alice"))
+    val listOfUser  = listOf(User("Bob"), User("Alice"))
 
     @LocalServerPort
     var randomServerPort = 0
@@ -48,16 +47,16 @@ class ControllerTest @Autowired constructor(
     fun userPost() {
         val uri = URI("http://localhost:$randomServerPort/api/users/addUser")
 
-        val listOfRequest: List<HttpEntity<ChessUser>> = listOfUser.map {
-            HttpEntity<ChessUser>(it, HttpHeaders())
+        val listOfRequest: List<HttpEntity<User>> = listOfUser.map {
+            HttpEntity<User>(it, HttpHeaders())
         }
 
         val results = listOfRequest.map { client.postForEntity(uri, it, String::class.java) }
 
 
-        val control = client.getForEntity<List<ChessUser>>(URI("http://localhost:$randomServerPort/api/users"))
+        val control = client.getForEntity<List<User>>(URI("http://localhost:$randomServerPort/api/users"))
 
-        val userList: List<ChessUser> = fromGsonToList(control.body)
+        val userList: List<User> = fromGsonToList(control.body)
 
         results.forEach {
             assert(it.statusCode == HttpStatus.OK)
@@ -160,7 +159,7 @@ class ControllerTest @Autowired constructor(
             assert(result.statusCode == HttpStatus.OK)
             assert(messageList.contains(it))
 
-            val control = client.getForEntity<List<ChessUser>>(URI("http://localhost:$randomServerPort/api/users"))
+            val control = client.getForEntity<List<User>>(URI("http://localhost:$randomServerPort/api/users"))
 
 
         }

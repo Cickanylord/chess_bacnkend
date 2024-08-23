@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.controller.match
+package com.hu.bme.aut.chess.backend.controller.match
 
 data class MatchRequest(
     val playerOne: Long,

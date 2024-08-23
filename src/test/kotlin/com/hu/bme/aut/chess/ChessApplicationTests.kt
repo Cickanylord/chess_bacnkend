@@ -1,13 +1,11 @@
 package com.hu.bme.aut.chess
 
-import com.hu.bme.aut.chess.controller.match.StepRequest
-import com.hu.bme.aut.chess.domain.ChessUser
-import com.hu.bme.aut.chess.domain.Match
-import com.hu.bme.aut.chess.domain.Message
-import com.hu.bme.aut.chess.repository.match.MatchService
-import com.hu.bme.aut.chess.repository.message.MessageService
-import com.hu.bme.aut.chess.repository.user.UserService
-import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
+import com.hu.bme.aut.chess.backend.controller.match.StepRequest
+import com.hu.bme.aut.chess.backend.users.User
+import com.hu.bme.aut.chess.backend.domain.Match
+import com.hu.bme.aut.chess.backend.messages.Message
+import com.hu.bme.aut.chess.backend.messages.MessageService
+import com.hu.bme.aut.chess.backend.repository.user.UserService
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,22 +17,22 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChessApplicationTests @Autowired constructor(
-	private val userService: UserService,
-	private val matchService: MatchService,
-	private val messageService: MessageService
+		private val userService: UserService,
+		private val matchService: MatchService,
+		private val messageService: MessageService
 ){
-	lateinit var user: ChessUser
-	lateinit var user2: ChessUser
-	lateinit var user3: ChessUser
+	lateinit var user: User
+	lateinit var user2: User
+	lateinit var user3: User
 	lateinit var match: Match
 	lateinit var match2: Match
 	@BeforeAll
 	fun setupVariables() {
-		user = ChessUser("János")
-		user2 = ChessUser("másik János")
-		user3 = ChessUser("Hamrmadik János")
+		user = User("János")
+		user2 = User("másik János")
+		user3 = User("Hamrmadik János")
 		match = Match(players = listOf(user, user2), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
-		match2 =Match(players = listOf(user, user3), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
+		match2 = Match(players = listOf(user, user3), board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" )
 	}
 	@BeforeEach
 	fun setupDB() {

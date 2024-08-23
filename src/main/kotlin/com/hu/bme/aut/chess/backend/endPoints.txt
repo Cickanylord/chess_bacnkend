@@ -1,0 +1,5 @@
+Get, Post
+api/user
+
+Get, Put, Delete
+api/user/{id}

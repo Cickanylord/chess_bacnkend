@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.controller.message
+package com.hu.bme.aut.chess.backend.messages
 
 data class MessageBody(
     val sender_id: Long,

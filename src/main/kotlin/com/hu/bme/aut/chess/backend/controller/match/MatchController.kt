@@ -1,20 +1,15 @@
-package com.hu.bme.aut.chess.controller.match
+package com.hu.bme.aut.chess.backend.controller.match
 
-import com.hu.bme.aut.chess.ai_engine.board.BoardData
-import com.hu.bme.aut.chess.domain.Match
-import com.hu.bme.aut.chess.repository.match.MatchService
-import com.hu.bme.aut.chess.repository.user.UserService
-import com.hu.bme.aut.chess.ai_engine.board.oldBoard.Board
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/matches")
-class MatchController @Autowired constructor(
-    private val userService: UserService,
-    private val matchService: MatchService
+class MatchController  constructor(
+
+
 ){
+    /*
     @GetMapping
     fun getMatches(): ResponseEntity<List<Match?>> {
         return  ResponseEntity.ok(matchService.getMatches())
@@ -51,4 +46,6 @@ class MatchController @Autowired constructor(
         }
         return ResponseEntity.notFound().build()
     }
+
+     */
 }

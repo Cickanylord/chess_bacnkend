@@ -1,7 +1,7 @@
-package com.hu.bme.aut.chess.repository.message
+package com.hu.bme.aut.chess.backend.messages
 
 
-import com.hu.bme.aut.chess.domain.Message
+import com.hu.bme.aut.chess.backend.messages.Message
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

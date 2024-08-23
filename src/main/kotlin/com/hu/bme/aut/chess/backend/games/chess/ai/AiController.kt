@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.controller.ai
+package com.hu.bme.aut.chess.backend.games.chess.ai
 
 import com.hu.bme.aut.chess.ai_engine.board.BoardData
 import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
