@@ -8,7 +8,7 @@ data class Fen(val boardData: BoardData) {
 
     override fun toString(): String{
         //TODO en-passant + step counter
-        return "${piecePlacement()} $activeColor ${castlingRights()} - 0 1"
+        return "${piecePlacement()} $activeColor ${castlingRights()} ${boardData.possibleEnPassantTargets} 0 1"
     }
 
     fun piecePlacement(): String {

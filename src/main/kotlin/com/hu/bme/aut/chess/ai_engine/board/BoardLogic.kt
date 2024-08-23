@@ -9,6 +9,12 @@ import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import kotlin.math.absoluteValue
 
 fun main() {
+
+    println(BoardCoordinates.toString())
+    println(BoardCoordinates.getCoordinate("c6"))
+    println(BoardCoordinates.getTileName(0, 3))
+
+
     //TODO
     //there is something wrong with castling. if the rook is removed by piece the castling right is not revoked
     //The castling right isn't revoked when the rook is captured
@@ -25,27 +31,31 @@ fun main() {
 
 
 
-    val boardData = BoardData("rn2kbnr/pBp1pppp/4b3/4q3/6P1/2N5/PPPPPP1P/R1BQK2R w KQkq - 0 1")
+    val boardData = BoardData("rnbqkbnr/pp1pppp1/8/1PpP4/7p/8/P1P1PPPP/RNBQKBNR w KQkq c6 0 5")
     val board = BoardLogic(boardData)
    // println(boardData.fen)
     //println(boardData.printBoard())
     cordinate()
-    //val king = board.board.getPiece(0,2)!!
+    val king = board.board.getPiece(6,0)!!
    // println(board.getLegalMoves(king))
+    println(boardData.fen.toString())
+    println( board.getLegalMoves(king))
+    //board.move(king, Pair(2,2))
+    println(boardData.printBoard())
+
+    //board.move(board.board.getPiece(6,7), Pair(4,7))
+    println(boardData.fen.toString())
 
 
 
-
-
-
-    var color = PieceColor.BLACK
+    var color = PieceColor.WHITE
 
     while (true) {
         val ai = NewAI(color ,boardData)
         val nextStep = ai.getTheNextStep()
-        board.move(nextStep.first, nextStep.second)
-
+        println(nextStep)
         println(boardData.fen.toString())
+        board.move(nextStep.first, nextStep.second)
         println(boardData.printBoard())
         color = color.oppositeColor()
     }
@@ -96,7 +106,7 @@ class BoardLogic(val board: BoardData) {
                 tmpBoard.board.movePiece(tmpBoard.board.getPiece(piece.position),pos)
 
                 //if the king in check it can't castle.
-                if(piece.name == PieceName.KING) {
+                if (piece.name == PieceName.KING) {
                     if (scanBoardForCheck(piece.pieceColor) && (pos.second - piece.j).absoluteValue == 2) {
                         //filters out castling moves
                         return@filter false
@@ -135,6 +145,9 @@ class BoardLogic(val board: BoardData) {
                         //the piece can't be move past other pieces -> the lines has no more legal moves
                         break
                     }
+
+                    //add en passant move if possible
+                    if(PieceName.PAWN == piece.name && currentField == BoardCoordinates.getCoordinate(board.possibleEnPassantTargets)) { final.add(currentField) }
 
                     if (piece.name != PieceName.PAWN || currentField.second == piece.j) { final.add(currentField) }
 
@@ -188,6 +201,20 @@ class BoardLogic(val board: BoardData) {
                         board.movePiece(board.getPiece(i, 0), Pair(i, 3))
                     }
                 }
+
+                //En Passant move
+                if(piece.name == PieceName.PAWN && move == BoardCoordinates.getCoordinate(board.possibleEnPassantTargets)) {
+                    when(piece.pieceColor) {
+                        PieceColor.WHITE -> {
+                            board.movePiece(null, move.copy(first = move.first + 1))
+                        }
+                        PieceColor.BLACK -> {
+                            board.movePiece(null, move.copy(second = move.first - 1))
+                        }
+                    }
+                }
+
+
                 //moves the piece on the board
                 board.movePiece(piece, move)
                 board.activeColor = board.activeColor.oppositeColor()
@@ -198,11 +225,13 @@ class BoardLogic(val board: BoardData) {
                 if (piece.name == PieceName.KING) {
                     when (piece.pieceColor) {
                         PieceColor.WHITE -> {
-                            board.castlingRights = CastlingRights(false, false, true, true)
+                            board.castlingRights.kw = false
+                            board.castlingRights.qw = false
                         }
 
                         PieceColor.BLACK -> {
-                            board.castlingRights = CastlingRights(true, true, false, false)
+                            board.castlingRights.kb = false
+                            board.castlingRights.qb = false
                         }
 
                         else -> throw IllegalArgumentException("no such color")
@@ -212,9 +241,6 @@ class BoardLogic(val board: BoardData) {
         }
 
     }
-
-
-
     /**
      * This function checks if the king can legally do the castling move
      * @param piece the king which moves we check if ti can castle
@@ -228,6 +254,8 @@ class BoardLogic(val board: BoardData) {
         if (fieldPos.second == piece.j - 2) {
             //checks if there is a piece between the king and rook
             for (k in 1..3) {
+                if(piece.j != 4)
+                println(piece)
                 //returns true if there is a piece between the king and rook
                 board.getPiece(piece.i, piece.j - k)?.let {
                     return true 
@@ -302,7 +330,8 @@ class BoardLogic(val board: BoardData) {
 
     /**
      * This function gets all the piece with its moves
-     *
+     * @param color the color which move we want to get
+     * @return the list of all steps with the piece we want to make the step
      */
     fun getMovesWithPiece(color: PieceColor): List<Pair<Piece, Pair<Int,Int>>> {
         val steps = mutableListOf<Pair<Piece, Pair<Int,Int>>>()

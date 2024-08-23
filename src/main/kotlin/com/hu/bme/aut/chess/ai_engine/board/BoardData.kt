@@ -11,6 +11,7 @@ import com.hu.bme.aut.chess.ai_engine.board.FEN.FenParser.piecePlacement
 import com.hu.bme.aut.chess.ai_engine.board.pieces.peice_interface.Piece
 import hu.bme.aut.android.monkeychess.board.TileNew
 import hu.bme.aut.android.monkeychess.board.pieces.*
+import kotlin.math.absoluteValue
 
 
 fun main() {
@@ -47,6 +48,8 @@ fun main() {
 data class BoardData(val fenString: String) {
     /** the fen generator for the Board*/
     var fen: Fen
+
+    var possibleEnPassantTargets = "-"
 
     /** stores the castling rights. After initialization the castling right cannot be given back(can't set it true) */
     var castlingRights: CastlingRights = CastlingRights(true, true, true, true)
@@ -87,6 +90,7 @@ data class BoardData(val fenString: String) {
         activeColor = activeColor(splitFen[1])
         castlingRights = castlingRights(splitFen[2])
         castlingAvailable = castlingRights.hasTrue()
+        possibleEnPassantTargets = splitFen[3]
         fen = Fen(this)
     }
 
@@ -153,11 +157,19 @@ data class BoardData(val fenString: String) {
             //remove piece
             board[piece.i][piece.j].piece = null
 
+            //if pawn moves forward 2 it should be noted in fen
+            enPasantParser(piece, pos)
+
+
             //changes the piece position
             it.step(pos.first, pos.second)
 
             //if rook is captured or moved revoke castling right
             revokeCastlingRightIfRookAbsent(scanCorners())
+
+            //if King steps castling rights should be removed
+            revokeCastlingRightIfKingStep(piece)
+
         }
     }
 
@@ -251,6 +263,25 @@ data class BoardData(val fenString: String) {
     }
 
     /**
+     * this function saves the en passant possibility state
+     *
+     * @param piece the piece we want to move
+     * @param pos the position where we want to move the piece
+     */
+    fun enPasantParser(piece: Piece, pos: Pair<Int, Int>) {
+        if ((pos.first - piece.i).absoluteValue == 2 && piece.name == PieceName.PAWN) {
+            when(piece.pieceColor) {
+                PieceColor.WHITE -> {
+                    possibleEnPassantTargets = BoardCoordinates.getTileName(pos.first + 1, pos.second)
+                }
+                PieceColor.BLACK -> {
+                    possibleEnPassantTargets = BoardCoordinates.getTileName(pos.first - 1, pos.second)
+                }
+            }
+        } else {possibleEnPassantTargets = "-"}
+    }
+
+    /**
      * This function revokes castling right if the rooks are absent
      * @param corners the corners state
      */
@@ -258,6 +289,28 @@ data class BoardData(val fenString: String) {
         for (i in 0..3) {
             if (!corners[i]) {
                 castlingRights[i] = false
+            }
+        }
+    }
+
+    /**
+     * This function removes castling right if king steps
+     *
+     * @param piece the piece we want to move
+     * @param pos the position where we want to move the piece
+     */
+    fun revokeCastlingRightIfKingStep(piece: Piece) {
+        if (piece.name == PieceName.KING) {
+            when (piece.pieceColor) {
+                PieceColor.WHITE -> {
+                    castlingRights.kw = false
+                    castlingRights.qw = false
+                }
+
+                PieceColor.BLACK -> {
+                    castlingRights.kb = false
+                    castlingRights.qb = false
+                }
             }
         }
     }
