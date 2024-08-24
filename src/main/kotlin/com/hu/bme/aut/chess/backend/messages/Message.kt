@@ -6,10 +6,17 @@ import lombok.Getter
 import lombok.Setter
 import org.hibernate.annotations.FetchProfile
 import java.time.LocalDateTime
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 
 @Entity
 @Setter
 @Getter
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator::class,
+    property = "id"
+)
 class Message (
     @Id
     @GeneratedValue

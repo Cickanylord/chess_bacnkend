@@ -1,6 +1,5 @@
-package com.hu.bme.aut.chess.backend.repository.match
+package com.hu.bme.aut.chess.backend.games.chess.match
 
-import com.hu.bme.aut.chess.backend.domain.Match
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

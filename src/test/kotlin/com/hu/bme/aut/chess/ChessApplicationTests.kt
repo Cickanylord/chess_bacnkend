@@ -1,8 +1,8 @@
 package com.hu.bme.aut.chess
 
-import com.hu.bme.aut.chess.backend.controller.match.StepRequest
+import com.hu.bme.aut.chess.backend.games.chess.match.StepRequest
 import com.hu.bme.aut.chess.backend.users.User
-import com.hu.bme.aut.chess.backend.domain.Match
+import com.hu.bme.aut.chess.backend.games.chess.match.Match
 import com.hu.bme.aut.chess.backend.messages.Message
 import com.hu.bme.aut.chess.backend.messages.MessageService
 import com.hu.bme.aut.chess.backend.repository.user.UserService

@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.controller.match
+package com.hu.bme.aut.chess.backend.games.chess.match
 
 data class StepRequest(
     val match_id: Long,

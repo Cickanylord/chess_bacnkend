@@ -3,3 +3,10 @@ api/user
 
 Get, Put, Delete
 api/user/{id}
+
+
+Get, Post
+api/messages
+
+Get
+api/messages/{id}

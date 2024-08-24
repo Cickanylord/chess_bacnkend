@@ -1,6 +1,8 @@
 package com.hu.bme.aut.chess.backend.messages
 
-import com.hu.bme.aut.chess.backend.users.User
+import com.hu.bme.aut.chess.backend.messages.DTO.MessageDTO
+import com.hu.bme.aut.chess.backend.messages.DTO.MessageDTOMapper
+import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import com.hu.bme.aut.chess.backend.users.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -10,30 +12,32 @@ import org.springframework.http.ResponseEntity
 @RequestMapping("/api/messages")
 class MessageController @Autowired constructor(
         private val messageRepository: MessageRepository,
-        private val userRepository: UserRepository
+        private val userRepository: UserRepository,
+        private val messageDTOMapper: MessageDTOMapper
 ) {
         @GetMapping
-        fun getAllMessages(): ResponseEntity<MutableList<Message>> {
-                return ResponseEntity.ok(messageRepository.findAll())
+        fun getAllMessages(): ResponseEntity<List<MessageDTO>> {
+                return ResponseEntity.ok( messageRepository.findAll().map { messageDTOMapper.apply(it) })
         }
 
         @GetMapping("getMessage/{message_id}")
-        fun getMessageByID(@PathVariable message_id: Long): ResponseEntity<Message> {
+        fun getMessageByID(@PathVariable message_id: Long): ResponseEntity<MessageDTO> {
                 return messageRepository.findById(message_id)
+                        .map ( messageDTOMapper::apply )
                         .map { ResponseEntity.ok(it)}
                         .orElseGet { ResponseEntity.notFound().build() }
         }
 
         @PostMapping()
-        fun addMatch(@RequestBody messageBody: MessageBody): ResponseEntity<Message> {
-                if(messageBody.receiver_id != messageBody.sender_id && messageBody.text != "") {
-                        val receiver = userRepository.findById(messageBody.receiver_id)
-                        val sender = userRepository.findById(messageBody.sender_id)
+        fun addMatch(@RequestBody messageRequestDTO: MessageRequestDTO): ResponseEntity<MessageDTO> {
+                if(messageRequestDTO.receiver_id != messageRequestDTO.sender_id && messageRequestDTO.text != "") {
+                        val receiver = userRepository.findById(messageRequestDTO.receiver_id)
+                        val sender = userRepository.findById(messageRequestDTO.sender_id)
 
                         when {
                                 receiver.isPresent && sender.isPresent -> {
-                                        Message(sender = sender.get(), receiver = receiver.get(), text =  messageBody.text).let {
-                                                return ResponseEntity.ok(messageRepository.save(it))
+                                        Message(sender = sender.get(), receiver = receiver.get(), text =  messageRequestDTO.text).let {
+                                                return ResponseEntity.ok(messageDTOMapper.apply(messageRepository.save(it)))
                                         }
                                 }
                         }

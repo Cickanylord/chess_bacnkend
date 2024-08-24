@@ -2,11 +2,11 @@ package com.hu.bme.aut.chess
 
 
 
-import com.hu.bme.aut.chess.backend.controller.match.MatchRequest
-import com.hu.bme.aut.chess.backend.controller.match.StepRequest
-import com.hu.bme.aut.chess.backend.messages.MessageBody
+import com.hu.bme.aut.chess.backend.games.chess.match.DTO.MatchRequestDTO
+import com.hu.bme.aut.chess.backend.games.chess.match.StepRequest
+import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import com.hu.bme.aut.chess.backend.users.User
-import com.hu.bme.aut.chess.backend.domain.Match
+import com.hu.bme.aut.chess.backend.games.chess.match.Match
 import com.hu.bme.aut.chess.backend.messages.Message
 import com.hu.bme.aut.chess.hulladek.fromGsonToList
 import com.hu.bme.aut.chess.backend.messages.MessageService
@@ -71,10 +71,10 @@ class ControllerTest @Autowired constructor(
     @Test
     fun matchPost() {
         listOfUser.forEach { userService.save(it) }
-        val matchRequest = MatchRequest(listOfUser[0].getId() ?: -1, listOfUser[1].getId() ?: -1, "")
+        val matchRequest = MatchRequestDTO(listOfUser[0].getId() ?: -1, listOfUser[1].getId() ?: -1, "")
 
         val uri = URI("http://localhost:$randomServerPort/api/matches/addMatch")
-        val request: HttpEntity<MatchRequest> = HttpEntity<MatchRequest>(matchRequest, HttpHeaders())
+        val request: HttpEntity<MatchRequestDTO> = HttpEntity<MatchRequestDTO>(matchRequest, HttpHeaders())
         val postResult: ResponseEntity<Match> = client.postForEntity(uri, request)
 
         assert(postResult.statusCode == HttpStatus.OK)
@@ -140,8 +140,8 @@ class ControllerTest @Autowired constructor(
         listOfUser.forEach { userService.save(it) }
         val uri = URI("http://localhost:$randomServerPort/api/messages/postMessage")
 
-        val messageBody = MessageBody(listOfUser[0].getId() ?: -1, listOfUser[1].getId() ?: -1, "Hello World")
-        val postResult: ResponseEntity<Message> = client.postForEntity(uri, messageBody)
+        val messageRequestDTO = MessageRequestDTO(listOfUser[0].getId() ?: -1, listOfUser[1].getId() ?: -1, "Hello World")
+        val postResult: ResponseEntity<Message> = client.postForEntity(uri, messageRequestDTO)
 
         assert(postResult.statusCode == HttpStatus.OK)
         assert(messageService.findAll()?.contains(postResult.body) ?: false)

@@ -1,10 +1,13 @@
 package com.hu.bme.aut.chess.backend.users
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.hu.bme.aut.chess.backend.messages.Message
 import jakarta.persistence.*
 import lombok.Data
 import lombok.Getter
 import kotlin.jvm.Transient
+import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 
 
 @Entity
