@@ -9,33 +9,31 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/user")
 class UserController @Autowired constructor(
-        private var userRepository: UserRepository,
-        private var userDTOMapper: UserDTOMapper
-    )
-{
+    private val userService: UserService,
+    private val userDTOMapper: UserDTOMapper
+) {
     @GetMapping
     fun getAllUser(): ResponseEntity<List<UserDTO>> {
-        val users = userRepository.findAll()
-        return ResponseEntity.ok(users.map { userDTOMapper.apply(it) })
+        return ResponseEntity.ok(userService.getAllUsers().map { userDTOMapper.apply(it) })
+
     }
 
     @GetMapping("{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<UserDTO> {
-        return userRepository.findById(id)
-            .map(userDTOMapper::apply)
-            .map { ResponseEntity.ok(it) }
-            .orElse(ResponseEntity.notFound().build())
+        return userService.getUserById(id)?.let {
+            ResponseEntity.ok(userDTOMapper.apply(it))
+        } ?: ResponseEntity.notFound().build()
     }
 
     @PostMapping
     fun addUser(@RequestBody user: User): ResponseEntity<UserDTO> {
-        return userRepository.save(user)
-            .let { ResponseEntity.ok(userDTOMapper.apply(it)) }
+        val savedUser = userService.saveUser(user)
+        return ResponseEntity.ok(userDTOMapper.apply (savedUser))
     }
 
     @DeleteMapping("/{id}")
-    fun removeUser(@PathVariable userId: Long): ResponseEntity<String> {
-        userRepository.deleteById(userId)
-        return ResponseEntity.ok().build();
+    fun removeUser(@PathVariable id: Long): ResponseEntity<String> {
+        userService.deleteUser(id)
+        return ResponseEntity.ok().build()
     }
 }

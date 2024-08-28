@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.games.chess.match
+package com.hu.bme.aut.chess.backend.match
 
 import com.hu.bme.aut.chess.backend.users.User
 import jakarta.persistence.*
@@ -7,12 +7,10 @@ import lombok.Setter
 
 
 @Entity
-@Setter
-@Getter
 class Match(
         @Id
         @GeneratedValue
-        val matchId: Long? = null,
+        private val matchId: Long? = null,
 
         @ManyToOne
         private val challenger: User,
@@ -20,7 +18,7 @@ class Match(
         @ManyToOne
         private val challenged: User,
 ) {
-        var board: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        private var board: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
         fun getMatchId(): Long? = matchId
 

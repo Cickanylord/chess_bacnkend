@@ -1,6 +1,6 @@
-package com.hu.bme.aut.chess.backend.games.chess.match.DTO
+package com.hu.bme.aut.chess.backend.match.DTO
 
-import com.hu.bme.aut.chess.backend.games.chess.match.Match
+import com.hu.bme.aut.chess.backend.match.Match
 import org.springframework.stereotype.Service
 import java.util.function.Function
 @Service

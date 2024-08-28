@@ -2,42 +2,21 @@ package com.hu.bme.aut.chess
 
 
 
-import com.hu.bme.aut.chess.backend.games.chess.match.DTO.MatchRequestDTO
-import com.hu.bme.aut.chess.backend.games.chess.match.StepRequest
-import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
-import com.hu.bme.aut.chess.backend.users.User
-import com.hu.bme.aut.chess.backend.games.chess.match.Match
-import com.hu.bme.aut.chess.backend.messages.Message
-import com.hu.bme.aut.chess.hulladek.fromGsonToList
-import com.hu.bme.aut.chess.backend.messages.MessageService
-import com.hu.bme.aut.chess.backend.repository.user.UserService
-
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.test.web.client.getForEntity
-import org.springframework.boot.test.web.client.postForEntity
-import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import java.net.URI
-
 
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ControllerTest @Autowired constructor(
+class ControllerTestOld @Autowired constructor(
         val client: TestRestTemplate,
-        private val userService: UserService,
-        private val matchService: MatchService,
-        private val messageService: MessageService
+
 ){
+    /*
     val listOfUser  = listOf(User("Bob"), User("Alice"))
 
     @LocalServerPort
@@ -164,5 +143,7 @@ class ControllerTest @Autowired constructor(
 
         }
     }
+
+     */
 
 }

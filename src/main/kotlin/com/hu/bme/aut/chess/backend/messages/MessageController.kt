@@ -11,38 +11,33 @@ import org.springframework.http.ResponseEntity
 @RestController
 @RequestMapping("/api/messages")
 class MessageController @Autowired constructor(
-        private val messageRepository: MessageRepository,
-        private val userRepository: UserRepository,
+        private val messageService: MessageService,
         private val messageDTOMapper: MessageDTOMapper
 ) {
         @GetMapping
         fun getAllMessages(): ResponseEntity<List<MessageDTO>> {
-                return ResponseEntity.ok( messageRepository.findAll().map { messageDTOMapper.apply(it) })
+                return ResponseEntity.ok( messageService.getAllMessages().map { messageDTOMapper.apply(it) })
         }
 
-        @GetMapping("getMessage/{message_id}")
-        fun getMessageByID(@PathVariable message_id: Long): ResponseEntity<MessageDTO> {
-                return messageRepository.findById(message_id)
-                        .map ( messageDTOMapper::apply )
-                        .map { ResponseEntity.ok(it)}
-                        .orElseGet { ResponseEntity.notFound().build() }
+        @GetMapping("/{id}")
+        fun getMessageByID(@PathVariable id: Long): ResponseEntity<MessageDTO> {
+                return messageService.getMessageById(id)?.let {
+                        ResponseEntity.ok(messageDTOMapper.apply(it))
+                } ?: ResponseEntity.notFound().build()
         }
+
 
         @PostMapping()
         fun addMatch(@RequestBody messageRequestDTO: MessageRequestDTO): ResponseEntity<MessageDTO> {
-                if(messageRequestDTO.receiver_id != messageRequestDTO.sender_id && messageRequestDTO.text != "") {
-                        val receiver = userRepository.findById(messageRequestDTO.receiver_id)
-                        val sender = userRepository.findById(messageRequestDTO.sender_id)
+                return messageService.saveMessage(messageRequestDTO)?.let {
+                        ResponseEntity.ok(messageDTOMapper.apply(it))
+                } ?: ResponseEntity.notFound().build()
+        }
 
-                        when {
-                                receiver.isPresent && sender.isPresent -> {
-                                        Message(sender = sender.get(), receiver = receiver.get(), text =  messageRequestDTO.text).let {
-                                                return ResponseEntity.ok(messageDTOMapper.apply(messageRepository.save(it)))
-                                        }
-                                }
-                        }
-                }
-                return  ResponseEntity.notFound().build()
+        @DeleteMapping("/{id}")
+        fun removeMessage(@PathVariable id: Long): ResponseEntity<String> {
+                messageService.deleteMessage(id)
+                return ResponseEntity.ok("Message Deleted")
         }
 
 }

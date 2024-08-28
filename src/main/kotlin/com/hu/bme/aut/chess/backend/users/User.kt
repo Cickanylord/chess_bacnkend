@@ -1,13 +1,11 @@
 package com.hu.bme.aut.chess.backend.users
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.hu.bme.aut.chess.backend.messages.Message
+import com.hu.bme.aut.chess.backend.users.security.UserRole
 import jakarta.persistence.*
 import lombok.Data
 import lombok.Getter
 import kotlin.jvm.Transient
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.annotation.ObjectIdGenerators
 
 
 @Entity
@@ -19,15 +17,20 @@ class User(
     @GeneratedValue
     private val id: Long?=null,
     private var name: String,
-    @Transient
     private var password: String
 ) {
-    @OneToMany(mappedBy = "sender")
-    private val messagesSent: List<Message> = ArrayList<Message>()
 
-    @OneToMany(mappedBy = "receiver")
-    private val messagesReceived: List<Message> = ArrayList<Message>()
+    @OneToMany(mappedBy = "sender", cascade = [CascadeType.ALL])
+    private val messagesSent: MutableList<Message> = ArrayList<Message>()
 
+    @OneToMany(mappedBy = "receiver", cascade = [CascadeType.ALL])
+    private val messagesReceived: MutableList<Message> = ArrayList<Message>()
+
+
+
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private val roles: MutableSet<UserRole> = mutableSetOf(UserRole.GUEST)
 
     fun getId(): Long? = id
 
@@ -47,8 +50,10 @@ class User(
 
     fun getMessagesReceived(): List<Message> = messagesReceived
 
-    override fun toString(): String {
-        return "User(id=$id, name='$name')"
+    fun getRoles(): Set<UserRole> = roles
+
+    fun setRoles(userRole: UserRole) {
+        this.roles.add(userRole)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -62,6 +67,10 @@ class User(
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0
+    }
+
+    override fun toString(): String {
+        return "User(id=$id, name='$name', password='$password', messagesSent=$messagesSent, messagesReceived=$messagesReceived, roles=$roles)"
     }
 
 }
