@@ -16,12 +16,12 @@ abstract class MatchController @Autowired constructor(
 ){
     @GetMapping
     fun getMatches(): ResponseEntity<List<MatchResponseDTO>> {
-        return  ResponseEntity.ok(matchService.getAllMatches().map { matchResponseDTOMapper.apply(it) })
+        return  ResponseEntity.ok(matchService.findAllMatches().map { matchResponseDTOMapper.apply(it) })
     }
 
     @GetMapping("/{id}")
     fun getMatch(@PathVariable id: Long): ResponseEntity<MatchResponseDTO> {
-        return matchService.getMatchById(id)?.let {
+        return matchService.findMatchById(id)?.let {
             ResponseEntity.ok(matchResponseDTOMapper.apply(it))
         } ?: ResponseEntity.notFound().build()
     }

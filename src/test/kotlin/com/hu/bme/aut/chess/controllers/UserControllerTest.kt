@@ -25,8 +25,6 @@ class UserControllerTest @Autowired constructor (
     @Mock
     private val userResponseDTOMapper: UserResponseDTOMapper
 
-) {
-
-}
+)
 
 

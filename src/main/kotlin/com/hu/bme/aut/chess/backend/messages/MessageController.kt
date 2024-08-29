@@ -3,7 +3,6 @@ package com.hu.bme.aut.chess.backend.messages
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageDTO
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageDTOMapper
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
-import com.hu.bme.aut.chess.backend.users.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseEntity
@@ -16,12 +15,12 @@ class MessageController @Autowired constructor(
 ) {
         @GetMapping
         fun getAllMessages(): ResponseEntity<List<MessageDTO>> {
-                return ResponseEntity.ok( messageService.getAllMessages().map { messageDTOMapper.apply(it) })
+                return ResponseEntity.ok( messageService.findAllMessages().map { messageDTOMapper.apply(it) })
         }
 
         @GetMapping("/{id}")
         fun getMessageByID(@PathVariable id: Long): ResponseEntity<MessageDTO> {
-                return messageService.getMessageById(id)?.let {
+                return messageService.findMessageById(id)?.let {
                         ResponseEntity.ok(messageDTOMapper.apply(it))
                 } ?: ResponseEntity.notFound().build()
         }

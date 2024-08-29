@@ -5,5 +5,4 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(JWTProperties::class)
-class JWTConfiguration {
-}
+class JWTConfiguration

@@ -15,13 +15,13 @@ class UserController @Autowired constructor(
 ) {
     @GetMapping
     fun getAllUser(): ResponseEntity<List<UserResponseDTO>> {
-        return ResponseEntity.ok(userService.getAllUsers().map { userResponseDTOMapper.apply(it) })
+        return ResponseEntity.ok(userService.findAllUsers().map { userResponseDTOMapper.apply(it) })
 
     }
 
     @GetMapping("{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<UserResponseDTO> {
-        return userService.getUserById(id)?.let {
+        return userService.findUserById(id)?.let {
             ResponseEntity.ok(userResponseDTOMapper.apply(it))
         } ?: ResponseEntity.notFound().build()
     }

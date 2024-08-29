@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.users.security;
+package com.hu.bme.aut.chess.backend.users.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.ServletException

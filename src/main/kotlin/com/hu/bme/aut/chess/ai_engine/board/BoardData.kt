@@ -99,7 +99,7 @@ data class BoardData(val fenString: String) {
      */
 
     fun cleanTheBoard() {
-        getAllPieces().forEach() { removePiece(it) }
+        getAllPieces().forEach { removePiece(it) }
     }
 
     /**
@@ -188,7 +188,7 @@ data class BoardData(val fenString: String) {
 
     fun loadBoard(pieces: List<Piece>){
         cleanTheBoard()
-        pieces.forEach(){
+        pieces.forEach {
             addPiece(it)
         }
         //scan the corners if whether the rook is absent
@@ -324,7 +324,7 @@ data class BoardData(val fenString: String) {
         var boardString = ""
 
         board.forEach {
-            it.forEach() { tile ->
+            it.forEach { tile ->
                 boardString += tile.piece?.letter ?: if(!tile.free) {"-"} else {"X"}
             }
             boardString += "\n"

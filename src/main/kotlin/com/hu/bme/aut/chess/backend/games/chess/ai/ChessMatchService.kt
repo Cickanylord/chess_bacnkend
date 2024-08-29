@@ -15,7 +15,7 @@ class ChessMatchService @Autowired constructor(
 ) : MatchService(matchRepository, userService) {
 
     override fun updateMatch(step: StepRequest): Match? {
-        getMatchById(step.match_id)?.let { match ->
+        findMatchById(step.match_id)?.let { match ->
             // TODO: verification of board by the rules of chess
             match.setBoard(step.board)
             return matchRepository.save(match)

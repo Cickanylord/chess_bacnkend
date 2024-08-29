@@ -221,7 +221,7 @@ class BoardTest {
         BoardLogic(BoardData(whiteCheckBlocking)).let { boardLogic ->
             val expectedSteps = mutableListOf(Pair(6,4),Pair(2,4), Pair(7,3), Pair(7,5), Pair(6,3), Pair(6,5))
             val steps: MutableList<Pair<Int, Int>> = mutableListOf()
-            boardLogic.board.getPiecesByColor(PieceColor.WHITE).forEach() {
+            boardLogic.board.getPiecesByColor(PieceColor.WHITE).forEach {
                 steps.addAll(boardLogic.getLegalMoves(it))
             }
             assert(steps.containsAll(expectedSteps) && steps.size == expectedSteps.size)

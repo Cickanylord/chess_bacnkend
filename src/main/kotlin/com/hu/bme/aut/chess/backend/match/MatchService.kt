@@ -15,18 +15,18 @@ abstract class MatchService @Autowired constructor(
     private val matchRepository: MatchRepository,
     private val userService: UserService
 ) {
-    fun getAllMatches(): List<Match> {
+    fun findAllMatches(): List<Match> {
         return matchRepository.findAll()
     }
 
-    fun getMatchById(id: Long): Match? {
+    fun findMatchById(id: Long): Match? {
         return matchRepository.findById(id).get()
     }
 
     fun saveMatch(matchReq: MatchRequestDTO): Match? {
         if(matchReq.challenged != matchReq.challenger) {
-            val challenger = userService.getUserById(matchReq.challenger)
-            val challenged = userService.getUserById(matchReq.challenged)
+            val challenger = userService.findUserById(matchReq.challenger)
+            val challenged = userService.findUserById(matchReq.challenged)
             when {
                 challenger != null && challenged != null -> {
                     val match = Match(challenger = challenger, challenged =  challenged)

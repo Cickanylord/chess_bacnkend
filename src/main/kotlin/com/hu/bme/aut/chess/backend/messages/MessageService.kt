@@ -12,17 +12,17 @@ class MessageService @Autowired constructor(
     private val messageRepository: MessageRepository,
     private val userService: UserService
 ) {
-    fun getAllMessages(): List<Message> {
+    fun findAllMessages(): List<Message> {
         return messageRepository.findAll()
     }
 
-    fun getMessageById(id: Long): Message? {
+    fun findMessageById(id: Long): Message? {
         return messageRepository.findById(id).orElse(null)
     }
 
     fun saveMessage(messageRequestDTO: MessageRequestDTO): Message? {
-        val receiver = userService.getUserById(messageRequestDTO.receiver_id)
-        val sender = userService.getUserById(messageRequestDTO.sender_id)
+        val receiver = userService.findUserById(messageRequestDTO.receiver_id)
+        val sender = userService.findUserById(messageRequestDTO.sender_id)
 
         if (receiver != null && sender != null && sender.getId() != receiver.getId()) {
             val message = Message(sender = sender, receiver = receiver, text = messageRequestDTO.text)

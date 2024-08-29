@@ -29,7 +29,7 @@ object FenParser {
         val listOfPieces: MutableList<Piece> = mutableListOf()
         var i: Int = 0
         var j: Int = 0
-        piecePlacementString.forEach() { fenChar ->
+        piecePlacementString.forEach { fenChar ->
             //empty tiles
             if(fenChar.isDigit()) {
                 j += fenChar.toString().toInt() -1

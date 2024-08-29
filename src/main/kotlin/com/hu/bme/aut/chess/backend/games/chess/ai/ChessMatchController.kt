@@ -12,6 +12,4 @@ import org.springframework.web.bind.annotation.RestController
 class ChessMatchController @Autowired constructor(
     private val chessMatchService: ChessMatchService,
     private val matchResponseDTOMapper: MatchResponseDTOMapper
-) : MatchController(chessMatchService, matchResponseDTOMapper) {
-
-}
+) : MatchController(chessMatchService, matchResponseDTOMapper)

@@ -15,25 +15,30 @@ class UserService @Autowired constructor(
     private var passwordEncoder: PasswordEncoder
 
 ) {
-    fun getAllUsers(): List<User> {
+    fun findAllUsers(): List<User> {
         return userRepository.findAll()
     }
 
-    fun getUserById(id: Long): User? {
+    fun findUserById(id: Long): User? {
         return userRepository.findById(id).get()
     }
+
+    fun findUserByName(name: String): User? {
+        return userRepository.findUserByName(name).get()
+    }
+
 
     fun saveUser(userRequestDTO: UserRequestDTO): User {
         val user = User()
         user.setPassword(passwordEncoder.encode(userRequestDTO.password))
+
         user.setName(userRequestDTO.name)
 
-        println(user.toString())
         return userRepository.save(user)
     }
 
     fun grantAuthority(id: Long,role: UserRole): User? {
-        getUserById(1)?.let {
+        findUserById(1)?.let {
             it.getRoles().add(role)
             return it
         } ?: return null

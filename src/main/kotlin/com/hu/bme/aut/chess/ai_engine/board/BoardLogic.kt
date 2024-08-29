@@ -99,7 +99,7 @@ class BoardLogic(val board: BoardData) {
 
         return  final
 
-            .filter() { pos ->
+            .filter { pos ->
 
                 //init new board to check if the king is in check.
                 val tmpBoard = BoardLogic(BoardData(board.fen.toString()))
@@ -298,7 +298,7 @@ class BoardLogic(val board: BoardData) {
         val listOfMovesOppositeColorCanDo: MutableList<Pair<Int, Int>> = mutableListOf()
         val king = boardLogic.board.getKing(color)
         boardLogic.board.getPiecesByColor(color.oppositeColor())
-            .forEach() {
+            .forEach {
                 boardLogic.getPieceVision(it, listOfMovesOppositeColorCanDo)
             }
          return listOfMovesOppositeColorCanDo.contains(king.position)
@@ -312,7 +312,7 @@ class BoardLogic(val board: BoardData) {
      */
     fun removeMovesResultingInCheck(piece: Piece, final: MutableList<Pair<Int, Int>>) {
         val shouldRemove: MutableList<Pair<Int, Int>> = mutableListOf()
-        final.forEach() { pos->
+        final.forEach { pos->
             val tmpBoard = BoardLogic(BoardData(board.fen.toString()))
             tmpBoard.board.movePiece(tmpBoard.board.getPiece(piece.position), pos)
             if (scanBoardForCheck(piece.pieceColor, tmpBoard)) {
@@ -324,7 +324,7 @@ class BoardLogic(val board: BoardData) {
 
     fun getLegalStepsForColor(color: PieceColor):  MutableList<Pair<Int, Int>> {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
-        board.getAllPieces().forEach() { final.addAll(getLegalMoves(it)) }
+        board.getAllPieces().forEach { final.addAll(getLegalMoves(it)) }
         return final
     }
 
@@ -336,9 +336,9 @@ class BoardLogic(val board: BoardData) {
     fun getMovesWithPiece(color: PieceColor): List<Pair<Piece, Pair<Int,Int>>> {
         val steps = mutableListOf<Pair<Piece, Pair<Int,Int>>>()
         board.getPiecesByColor(color)
-            .forEach() { piece->
+            .forEach { piece->
             getLegalMoves(piece)
-                .forEach(){ move->
+                .forEach { move->
                 steps.add(Pair(piece,move))
             }
         }
