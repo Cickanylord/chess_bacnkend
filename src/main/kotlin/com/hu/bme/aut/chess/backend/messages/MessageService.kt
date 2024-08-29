@@ -3,6 +3,7 @@ package com.hu.bme.aut.chess.backend.messages
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import com.hu.bme.aut.chess.backend.users.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,6 +22,7 @@ class MessageService @Autowired constructor(
     }
 
     fun saveMessage(messageRequestDTO: MessageRequestDTO): Message? {
+        val authentication = SecurityContextHolder.getContext().authentication
         val receiver = userService.findUserById(messageRequestDTO.receiver_id)
         val sender = userService.findUserById(messageRequestDTO.sender_id)
 

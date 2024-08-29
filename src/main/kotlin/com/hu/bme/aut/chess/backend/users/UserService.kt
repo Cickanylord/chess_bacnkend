@@ -1,7 +1,11 @@
 package com.hu.bme.aut.chess.backend.users
 
+import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsImpl
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 
 import org.springframework.stereotype.Service
@@ -26,6 +30,15 @@ class UserService @Autowired constructor(
         return userRepository.findUserByName(name)
     }
 
+    fun findAuthenticatedUser(): User?{
+        val authentication = SecurityContextHolder.getContext().authentication
+        if (authentication != null && authentication.principal is UserDetails) {
+            val userDetails: UserDetailsImpl = authentication.principal as UserDetailsImpl
+            return findUserById(userDetails.id)
+        }
+        return null
+    }
+
 
     fun saveUser(userRequestDTO: UserRequestDTO): User {
         val user = User()
@@ -46,5 +59,4 @@ class UserService @Autowired constructor(
     fun deleteUser(id: Long) {
         userRepository.deleteById(id)
     }
-
 }

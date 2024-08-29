@@ -26,6 +26,13 @@ class UserController @Autowired constructor(
         } ?: ResponseEntity.notFound().build()
     }
 
+    @GetMapping("/me")
+    fun getById(): ResponseEntity<UserResponseDTO> {
+        return userService.findAuthenticatedUser()?.let {
+            ResponseEntity.ok(it.toUserResponse())
+        } ?: ResponseEntity.notFound().build()
+    }
+
     @PostMapping
     fun addUser(@RequestBody userRequestDTO: UserRequestDTO): ResponseEntity<UserResponseDTO> {
         val savedUser = userService.saveUser(userRequestDTO)

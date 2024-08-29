@@ -25,7 +25,6 @@ class SecurityConfig(
     private val authenticationProvider: AuthenticationProvider
 ) {
 
-
     @Bean
     fun filterChain(
         http: HttpSecurity,
@@ -43,6 +42,7 @@ class SecurityConfig(
                 auth.requestMatchers("/api/chessMatch").permitAll()
                 auth.requestMatchers("/api/chessMatch/*").permitAll()
                 auth.requestMatchers("/api/auth").permitAll()
+                auth.requestMatchers("/api/user/me").permitAll()
             }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
