@@ -27,7 +27,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.22")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas:3.3.2")
 	implementation("org.springframework.data:spring-data-rest-hal-explorer:4.3.2")
-    implementation("org.springframework.boot:spring-boot-starter-security:3.2.8")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     runtimeOnly("com.h2database:h2:2.2.224")
 	testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.1")
 	implementation("com.google.code.gson:gson:2.10.1")
@@ -39,8 +39,14 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.34")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
 
-	// If you need a specific kapt dependency, add it here, e.g.:
-	// kapt("com.google.dagger:dagger-compiler:2.44")
+	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+	implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
+	testImplementation("org.springframework.security:spring-security-test")
+
+
+
 }
 
 tasks.withType<KotlinCompile> {

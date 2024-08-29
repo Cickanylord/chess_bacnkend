@@ -1,5 +1,7 @@
 package com.hu.bme.aut.chess.backend.users
 
+import com.hu.bme.aut.chess.backend.users.DTO.UserRequestDTO
+import com.hu.bme.aut.chess.backend.users.security.UserRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -21,10 +23,20 @@ class UserService @Autowired constructor(
         return userRepository.findById(id).get()
     }
 
-    fun saveUser(user: User): User {
-        user.setPassword(passwordEncoder.encode(user.getPassword()))
+    fun saveUser(userRequestDTO: UserRequestDTO): User {
+        val user = User()
+        user.setPassword(passwordEncoder.encode(userRequestDTO.password))
+        user.setName(userRequestDTO.name)
+
         println(user.toString())
         return userRepository.save(user)
+    }
+
+    fun grantAuthority(id: Long,role: UserRole): User? {
+        getUserById(1)?.let {
+            it.getRoles().add(role)
+            return it
+        } ?: return null
     }
 
     fun deleteUser(id: Long) {

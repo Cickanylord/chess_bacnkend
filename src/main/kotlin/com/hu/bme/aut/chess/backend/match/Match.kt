@@ -2,9 +2,6 @@ package com.hu.bme.aut.chess.backend.match
 
 import com.hu.bme.aut.chess.backend.users.User
 import jakarta.persistence.*
-import lombok.Getter
-import lombok.Setter
-
 
 @Entity
 class Match(

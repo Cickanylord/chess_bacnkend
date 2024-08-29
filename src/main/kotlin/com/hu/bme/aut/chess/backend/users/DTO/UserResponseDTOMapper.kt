@@ -6,13 +6,16 @@ import java.util.function.Function
 
 
 @Service
-class UserDTOMapper : Function<User, UserDTO> {
-    override fun apply(user: User): UserDTO {
-        return UserDTO(
+class UserResponseDTOMapper : Function<User, UserResponseDTO> {
+    override fun apply(user: User): UserResponseDTO {
+        return UserResponseDTO(
             user.getId()!!,
             user.getName(),
+            user.getRoles(),
             user.getMessagesSent().map { it.getId()!! },
             user.getMessagesReceived().map { it.getId()!! },
+            user.getChallenged().map {  it.getMatchId()!! },
+            user.getChallenger().map {  it.getMatchId()!! },
         )
     }
 }

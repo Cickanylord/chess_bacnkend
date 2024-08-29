@@ -65,7 +65,7 @@ data class BoardData(val fenString: String) {
     /** the current player which can move */
     var activeColor: PieceColor
     /** shows if castling is available on the board */
-    var castlingAvailable: Boolean //castlingRights.isFullOfFalse().not()
+    var castlingAvailable: Boolean
 
     /** the number of row and columns on the chess board */
     val numRows = 8
@@ -158,7 +158,7 @@ data class BoardData(val fenString: String) {
             board[piece.i][piece.j].piece = null
 
             //if pawn moves forward 2 it should be noted in fen
-            enPasantParser(piece, pos)
+            enPassantParser(piece, pos)
 
 
             //changes the piece position
@@ -268,7 +268,7 @@ data class BoardData(val fenString: String) {
      * @param piece the piece we want to move
      * @param pos the position where we want to move the piece
      */
-    fun enPasantParser(piece: Piece, pos: Pair<Int, Int>) {
+    fun enPassantParser(piece: Piece, pos: Pair<Int, Int>) {
         if ((pos.first - piece.i).absoluteValue == 2 && piece.name == PieceName.PAWN) {
             when(piece.pieceColor) {
                 PieceColor.WHITE -> {
