@@ -22,9 +22,8 @@ class MessageService @Autowired constructor(
     }
 
     fun saveMessage(messageRequestDTO: MessageRequestDTO): Message? {
-        val authentication = SecurityContextHolder.getContext().authentication
         val receiver = userService.findUserById(messageRequestDTO.receiver_id)
-        val sender = userService.findUserById(messageRequestDTO.sender_id)
+        val sender = userService.findAuthenticatedUser()
 
         if (receiver != null && sender != null && sender.getId() != receiver.getId()) {
             val message = Message(sender = sender, receiver = receiver, text = messageRequestDTO.text)

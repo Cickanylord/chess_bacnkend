@@ -3,7 +3,6 @@ package com.hu.bme.aut.chess.controllers
 
 import com.hu.bme.aut.chess.backend.users.UserController
 import com.hu.bme.aut.chess.backend.users.*
-import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserResponseDTOMapper
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired

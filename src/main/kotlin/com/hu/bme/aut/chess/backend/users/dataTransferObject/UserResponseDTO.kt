@@ -4,7 +4,7 @@ import com.hu.bme.aut.chess.backend.users.UserRole
 
 
 data class UserResponseDTO(
-    val _id: Long,
+    val id: Long,
     val name: String,
     val roles: Set<UserRole>,
     val messagesSent: List<Long>,

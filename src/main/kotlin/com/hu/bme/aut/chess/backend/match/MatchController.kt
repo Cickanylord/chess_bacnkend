@@ -4,6 +4,8 @@ import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTO
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTOMapper
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
+import com.hu.bme.aut.chess.backend.users.User
+import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserResponseDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -12,38 +14,51 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/matches")
 abstract class MatchController @Autowired constructor(
     private val matchService: MatchService,
-    private val matchResponseDTOMapper: MatchResponseDTOMapper
 ){
     @GetMapping
-    fun getMatches(): ResponseEntity<List<MatchResponseDTO>> {
-        return  ResponseEntity.ok(matchService.findAllMatches().map { matchResponseDTOMapper.apply(it) })
-    }
+    fun getMatches(): ResponseEntity<List<MatchResponseDTO>> =
+        ResponseEntity
+            .ok(matchService.findAllMatches()
+                .map { it.toMatchResponseDTO()!! }
+            )
+
 
     @GetMapping("/{id}")
-    fun getMatch(@PathVariable id: Long): ResponseEntity<MatchResponseDTO> {
-        return matchService.findMatchById(id)?.let {
-            ResponseEntity.ok(matchResponseDTOMapper.apply(it))
-        } ?: ResponseEntity.notFound().build()
-    }
+    fun getMatch(@PathVariable id: Long): ResponseEntity<MatchResponseDTO> =
+        matchService.findMatchById(id).toMatchResponseEntity()
+
 
     @PostMapping
-    fun addMatch(@RequestBody matchReq: MatchRequestDTO): ResponseEntity<MatchResponseDTO> {
-        return matchService.saveMatch(matchReq)?.let {
-            ResponseEntity.ok(matchResponseDTOMapper.apply(it))
-        } ?: ResponseEntity.notFound().build()
-    }
+    fun addMatch(@RequestBody matchReq: MatchRequestDTO): ResponseEntity<MatchResponseDTO> =
+    matchService.saveMatch(matchReq).toMatchResponseEntity()
     
     @PutMapping("/step")
-    fun step(@RequestBody step: StepRequest): ResponseEntity<MatchResponseDTO> {
-        return matchService.updateMatch(step)?.let {
-            ResponseEntity.ok(matchResponseDTOMapper.apply(it))
-        } ?: ResponseEntity.notFound().build()
-    }
+    fun step(@RequestBody step: StepRequest): ResponseEntity<MatchResponseDTO> =
+        matchService.updateMatch(step).toMatchResponseEntity()
+
 
 
     @DeleteMapping("/{id}")
     fun deleteMatch(@PathVariable id: Long): ResponseEntity<String> {
         matchService.deleteMatch(id)
         return ResponseEntity.ok("Match Deleted")
+    }
+
+
+    fun Match?.toMatchResponseDTO(): MatchResponseDTO? {
+        return this?.let { match ->
+            MatchResponseDTO(
+                match.getMatchId()!!,
+                match.getChallenger().getId()!!,
+                match.getChallenged().getId()!!,
+                match.getBoard()
+            )
+        }
+    }
+
+    fun Match?.toMatchResponseEntity(): ResponseEntity<MatchResponseDTO>  {
+        return this.toMatchResponseDTO()?.let {
+            ResponseEntity.ok(it)
+        } ?: ResponseEntity.notFound().build()
     }
 }

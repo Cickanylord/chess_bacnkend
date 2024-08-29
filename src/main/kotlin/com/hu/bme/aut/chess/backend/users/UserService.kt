@@ -1,11 +1,13 @@
 package com.hu.bme.aut.chess.backend.users
 
 import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsImpl
+import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsServiceImpl
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 
 import org.springframework.stereotype.Service
@@ -15,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class UserService @Autowired constructor(
     private val userRepository: UserRepository,
-    private var passwordEncoder: PasswordEncoder
-
+    private var passwordEncoder: PasswordEncoder,
 ) {
     fun findAllUsers(): List<User> {
         return userRepository.findAll()

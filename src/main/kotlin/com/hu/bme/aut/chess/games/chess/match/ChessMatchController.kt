@@ -11,5 +11,4 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/chessMatch")
 class ChessMatchController @Autowired constructor(
     private val chessMatchService: ChessMatchService,
-    private val matchResponseDTOMapper: MatchResponseDTOMapper
-) : MatchController(chessMatchService, matchResponseDTOMapper)
+) : MatchController(chessMatchService)
