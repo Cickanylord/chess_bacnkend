@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.users.security
+package com.hu.bme.aut.chess.backend.users
 
 
 enum class UserRole(private val displayName: String) {

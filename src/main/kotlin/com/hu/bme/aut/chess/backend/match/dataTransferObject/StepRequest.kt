@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.match.DTO
+package com.hu.bme.aut.chess.backend.match.dataTransferObject
 
 data class StepRequest(
     val match_id: Long,

@@ -1,7 +1,6 @@
 package com.hu.bme.aut.chess.backend.users
 
-import com.hu.bme.aut.chess.backend.users.DTO.UserRequestDTO
-import com.hu.bme.aut.chess.backend.users.security.UserRole
+import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -24,7 +23,7 @@ class UserService @Autowired constructor(
     }
 
     fun findUserByName(name: String): User? {
-        return userRepository.findUserByName(name).get()
+        return userRepository.findUserByName(name)
     }
 
 

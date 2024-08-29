@@ -1,6 +1,6 @@
-package com.hu.bme.aut.chess.backend.users.DTO
+package com.hu.bme.aut.chess.backend.users.dataTransferObject
 
-import com.hu.bme.aut.chess.backend.users.security.UserRole
+import com.hu.bme.aut.chess.backend.users.UserRole
 
 
 data class UserResponseDTO(

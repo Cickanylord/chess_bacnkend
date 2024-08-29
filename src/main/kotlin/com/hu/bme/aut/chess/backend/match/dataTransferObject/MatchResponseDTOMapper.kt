@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.match.DTO
+package com.hu.bme.aut.chess.backend.match.dataTransferObject
 
 import com.hu.bme.aut.chess.backend.match.Match
 import org.springframework.stereotype.Service

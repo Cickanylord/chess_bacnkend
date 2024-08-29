@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.users.DTO
+package com.hu.bme.aut.chess.backend.users.dataTransferObject
 
 import com.hu.bme.aut.chess.backend.users.User
 import org.springframework.stereotype.Service

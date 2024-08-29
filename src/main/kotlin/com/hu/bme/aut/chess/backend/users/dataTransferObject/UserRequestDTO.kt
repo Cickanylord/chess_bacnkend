@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.users.DTO
+package com.hu.bme.aut.chess.backend.users.dataTransferObject
 
 data class UserRequestDTO(
     val name: String,

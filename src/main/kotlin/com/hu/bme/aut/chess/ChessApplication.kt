@@ -1,25 +1,19 @@
 package com.hu.bme.aut.chess
 
 
-import com.hu.bme.aut.chess.backend.users.DTO.UserRequestDTO
+import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import com.hu.bme.aut.chess.backend.users.UserService
-import com.hu.bme.aut.chess.backend.users.security.UserRole
+import com.hu.bme.aut.chess.backend.users.UserRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties
 class ChessApplication(
-	@Autowired
-	private val passwordEncoder: PasswordEncoder,
 	@Autowired
 	private val userService: UserService
 ) : CommandLineRunner {

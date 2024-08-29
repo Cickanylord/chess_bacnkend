@@ -1,9 +1,9 @@
 package com.hu.bme.aut.chess.backend.match
 
-import com.hu.bme.aut.chess.backend.match.DTO.MatchRequestDTO
-import com.hu.bme.aut.chess.backend.match.DTO.MatchResponseDTO
-import com.hu.bme.aut.chess.backend.match.DTO.MatchResponseDTOMapper
-import com.hu.bme.aut.chess.backend.match.DTO.StepRequest
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTO
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTOMapper
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

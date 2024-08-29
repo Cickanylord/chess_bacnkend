@@ -1,6 +1,6 @@
-package com.hu.bme.aut.chess.backend.games.chess.ai
+package com.hu.bme.aut.chess.games.chess.match
 
-import com.hu.bme.aut.chess.backend.match.DTO.StepRequest
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.match.MatchRepository
 import com.hu.bme.aut.chess.backend.match.MatchService

@@ -1,8 +1,8 @@
 package com.hu.bme.aut.chess.backend.match
 
 
-import com.hu.bme.aut.chess.backend.match.DTO.MatchRequestDTO
-import com.hu.bme.aut.chess.backend.match.DTO.StepRequest
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
 import com.hu.bme.aut.chess.backend.users.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

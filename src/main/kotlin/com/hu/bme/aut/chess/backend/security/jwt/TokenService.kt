@@ -1,6 +1,5 @@
-package com.hu.bme.aut.chess.backend.service
+package com.hu.bme.aut.chess.backend.security.jwt
 
-import com.hu.bme.aut.chess.backend.config.JWTProperties
 import io.jsonwebtoken.Claims
 import org.springframework.stereotype.Service
 import io.jsonwebtoken.Jwts

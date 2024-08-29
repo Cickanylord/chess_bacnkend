@@ -2,10 +2,7 @@ package com.hu.bme.aut.chess.backend.users
 
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.messages.Message
-import com.hu.bme.aut.chess.backend.users.security.UserRole
 import jakarta.persistence.*
-import lombok.Data
-import lombok.Getter
 
 
 @Entity

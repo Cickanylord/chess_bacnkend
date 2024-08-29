@@ -1,4 +1,4 @@
-package com.hu.bme.aut.chess.backend.users.security.userDetails
+package com.hu.bme.aut.chess.backend.security.userDetails
 
 import com.hu.bme.aut.chess.backend.users.User
 import org.springframework.security.core.GrantedAuthority
