@@ -139,9 +139,9 @@ data class BoardData(val fenString: String) {
      * @param pos the position of the piece
      * @return gets the piece from the position if the position empty then returns null
      */
-    fun getPiece(pos: Pair<Int, Int>): Piece {
+    fun getPiece(pos: Pair<Int, Int>): Piece? {
         val piece = board[pos.first][pos.second].piece
-        return piece!!
+        return piece
     }
 
     /**

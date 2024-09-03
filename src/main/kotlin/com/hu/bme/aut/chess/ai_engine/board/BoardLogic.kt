@@ -1,7 +1,6 @@
 package com.hu.bme.aut.chess.ai_engine.board
 
 
-import com.hu.bme.aut.chess.Util.CastlingRights
 import com.hu.bme.aut.chess.ai_engine.ai.NewAI
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceName
@@ -94,8 +93,6 @@ class BoardLogic(val board: BoardData) {
 
         getPieceVision(piece, final)
         //removeMovesResultingInCheck(piece, final)
-
-
 
         return  final
 
@@ -322,7 +319,7 @@ class BoardLogic(val board: BoardData) {
         final.removeAll(shouldRemove)
     }
 
-    fun getLegalStepsForColor(color: PieceColor):  MutableList<Pair<Int, Int>> {
+    fun getLegalSteps(color: PieceColor):  MutableList<Pair<Int, Int>> {
         val final: MutableList<Pair<Int, Int>> = mutableListOf()
         board.getAllPieces().forEach { final.addAll(getLegalMoves(it)) }
         return final

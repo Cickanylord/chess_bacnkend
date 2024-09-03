@@ -24,9 +24,10 @@ abstract class MatchService @Autowired constructor(
     }
 
     fun saveMatch(matchReq: MatchRequestDTO): Match? {
-        if(matchReq.challenged != matchReq.challenger) {
-            val challenger = userService.findUserById(matchReq.challenger)
-            val challenged = userService.findUserById(matchReq.challenged)
+        val challenger = userService.findAuthenticatedUser()
+        val challenged = userService.findUserById(matchReq.challenged)
+
+        if(challenged != challenger) {
             when {
                 challenger != null && challenged != null -> {
                     val match = Match(challenger = challenger, challenged =  challenged)

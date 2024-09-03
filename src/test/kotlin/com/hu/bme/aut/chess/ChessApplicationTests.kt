@@ -4,6 +4,7 @@ import com.hu.bme.aut.chess.backend.match.MatchRepository
 import com.hu.bme.aut.chess.backend.messages.MessageRepository
 import com.hu.bme.aut.chess.backend.users.UserRepository
 import org.junit.jupiter.api.TestInstance
+import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -15,6 +16,9 @@ class ChessApplicationTests @Autowired constructor(
     private val matchRepository: MatchRepository,
     private val messageRepository: MessageRepository
 ){
+    @Mock
+    private val userService
+
 	/*
 	lateinit var user: User
 	lateinit var user2: User
