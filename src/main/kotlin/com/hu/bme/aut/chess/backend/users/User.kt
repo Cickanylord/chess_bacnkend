@@ -33,6 +33,15 @@ class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private val roles: MutableSet<UserRole> = mutableSetOf(UserRole.GUEST)
 
+    @ManyToMany(cascade = [CascadeType.PERSIST])
+    @JoinTable(
+        name = "friend_list",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "friend_id")]
+    )
+    private val friendList: MutableSet<User> = mutableSetOf()
+
+
     fun getId(): Long? = id
 
     fun getName(): String = name
@@ -60,6 +69,8 @@ class User {
     fun setRoles(userRole: UserRole) {
         this.roles.add(userRole)
     }
+
+    fun getFriendList(): MutableSet<User> = friendList
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

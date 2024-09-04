@@ -11,4 +11,5 @@ data class UserResponseDTO(
     val messagesReceived: List<Long>,
     val challenger: List<Long>,
     val challenged: List<Long>,
+    val friendList: List<Long>,
     )

@@ -1,15 +1,11 @@
 package com.hu.bme.aut.chess.backend.users
 
 import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsImpl
-import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsServiceImpl
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
-
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -43,11 +39,19 @@ class UserService @Autowired constructor(
 
     fun saveUser(userRequestDTO: UserRequestDTO): User {
         val user = User()
-        user.setPassword(passwordEncoder.encode(userRequestDTO.password))
+        user.setPassword (
+            passwordEncoder.encode (
+                userRequestDTO.password
+            )
+        )
 
         user.setName(userRequestDTO.name)
 
         return userRepository.save(user)
+    }
+
+    fun saveUser(user: User?): User? {
+        return user?.let { userRepository.save(it) }
     }
 
     fun grantAuthority(id: Long,role: UserRole): User? {
@@ -57,7 +61,28 @@ class UserService @Autowired constructor(
         } ?: return null
     }
 
+    fun addFriend(friendId: Long): User? {
+        val user = findAuthenticatedUser()
+        findUserById(friendId)?.let {friend ->
+            if (friend != user) {
+                friend.getFriendList().add(user!!)
+                user.getFriendList().add(friend)
+                saveUser(friend)
+                return saveUser(user)
+            }
+        }
+        return null
+    }
+
     fun deleteUser(id: Long) {
-        userRepository.deleteById(id)
+        val user = findUserById(id) ?: return
+        val friendIds = user
+            .getFriendList()
+            .map { it.getId() }
+
+        userRepository.findAllById(friendIds).forEach { friend ->
+            friend.getFriendList().remove(user)
+            saveUser(friend)
+        }
     }
 }

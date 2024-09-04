@@ -1,5 +1,6 @@
 package com.hu.bme.aut.chess.backend.users
 
+import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserFriendRequestDTO
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserResponseDTO
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,6 +34,10 @@ class UserController @Autowired constructor(
     fun addUser(@RequestBody userRequestDTO: UserRequestDTO): ResponseEntity<UserResponseDTO> =
         userService.saveUser(userRequestDTO).toUserResponseEntity()
 
+    @PutMapping("/addFriend")
+    fun addUserToFriendList(@RequestBody userFriendRequestDTO: UserFriendRequestDTO): ResponseEntity<UserResponseDTO> =
+        userService.addFriend(userFriendRequestDTO.id).toUserResponseEntity()
+
 
 
     @DeleteMapping("/{id}")
@@ -50,7 +55,8 @@ class UserController @Autowired constructor(
                 user.getMessagesSent().map { it.getId()!! },
                 user.getMessagesReceived().map { it.getId()!! },
                 user.getChallenged().map {  it.getMatchId()!! },
-                user.getChallenger().map {  it.getMatchId()!! }
+                user.getChallenger().map {  it.getMatchId()!! },
+                user.getFriendList().map {  it.getId()!! }
             )
         }
     }

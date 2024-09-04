@@ -44,9 +44,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
 	testImplementation("org.springframework.security:spring-security-test")
-
-
-
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 tasks.withType<KotlinCompile> {
