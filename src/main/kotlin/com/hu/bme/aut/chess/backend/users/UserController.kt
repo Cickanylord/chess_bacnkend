@@ -29,6 +29,16 @@ class UserController @Autowired constructor(
     fun getById(): ResponseEntity<UserResponseDTO> =
         userService.findAuthenticatedUser().toUserResponseEntity()
 
+    @GetMapping("/friends")
+    fun getFriends(): ResponseEntity<List<UserResponseDTO?>> =
+        ResponseEntity.ok(
+            userService.getAllFriends().map {
+                it.toUserResponseDTO()
+            }
+        )
+
+
+
 
     @PostMapping
     fun addUser(@RequestBody userRequestDTO: UserRequestDTO): ResponseEntity<UserResponseDTO> =

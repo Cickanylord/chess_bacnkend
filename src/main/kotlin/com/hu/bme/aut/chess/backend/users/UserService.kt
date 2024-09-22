@@ -73,6 +73,10 @@ class UserService @Autowired constructor(
         }
         return null
     }
+    fun getAllFriends(): List<User> {
+        val user = findAuthenticatedUser()
+        return user?.getFriendList()!!.toList()
+    }
 
     fun deleteUser(id: Long) {
         val user = findUserById(id) ?: return

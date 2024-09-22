@@ -29,6 +29,7 @@ class ChessApplication(
 			UserRequestDTO(name = name, password = "demo").let { users.add(it) }
 		}
 		users.forEach {userService.saveUser(it)}
+
 		userService.grantAuthority(1L, UserRole.ADMIN)
 	}
 

@@ -44,6 +44,7 @@ class SecurityConfig(
                 auth.requestMatchers("/api/auth").permitAll()
                 auth.requestMatchers("/api/user/me").permitAll()
                 auth.requestMatchers("/api/user/addFriend").authenticated()
+                auth.requestMatchers("/api/user/friends").authenticated()
             }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

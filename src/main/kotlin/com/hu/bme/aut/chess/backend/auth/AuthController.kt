@@ -21,7 +21,7 @@ class AuthController (
 
     @PostMapping
     fun authenticate(@RequestBody authRequest: AuthenticationRequestDTO): ResponseEntity<AuthenticationResponseDTO> {
-        emailService.sendSimpleMailMessage("tomifoka@hotmail.com", "test", "BAH")
+        //emailService.sendSimpleMailMessage("tomifoka@hotmail.com", "test", "BAH")
         return ResponseEntity.ok(authenticationService.authentication(authRequest))
     }
 
