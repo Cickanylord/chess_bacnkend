@@ -1,7 +1,7 @@
 package com.hu.bme.aut.chess.games.chess.match
 
-import com.hu.bme.aut.chess.ai_engine.board.BoardData
-import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
+import ai_engine.board.BoardLogic
+import com.auth.bme.chess.ai_engine.board.BoardData
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.match.MatchRepository
 import com.hu.bme.aut.chess.backend.match.MatchService

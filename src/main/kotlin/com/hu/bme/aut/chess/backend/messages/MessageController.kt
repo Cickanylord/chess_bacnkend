@@ -20,6 +20,17 @@ class MessageController @Autowired constructor(
         fun getMessageByID(@PathVariable id: Long): ResponseEntity<MessageDTO> =
                 messageService.findMessageById(id).toMessageResponseEntity()
 
+        @PostMapping("/partner/{id}")
+        fun getMessageBetweenUsers(@PathVariable id: Long): ResponseEntity<List<MessageDTO?>> =
+                ResponseEntity.ok(
+                messageService
+                        .findMessagesBetweenUsers(id)
+                        .map { message ->
+                                message.toMessageResponse()
+                        }
+                )
+
+
 
         @PostMapping()
         fun addMessage(@RequestBody messageRequestDTO: MessageRequestDTO): ResponseEntity<MessageDTO> =

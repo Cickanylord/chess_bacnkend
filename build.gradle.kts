@@ -1,9 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.ir.backend.js.compile
 
-		plugins {
+plugins {
 			id("org.springframework.boot") version "3.1.5"
 			id("io.spring.dependency-management") version "1.1.3"
-			kotlin("jvm") version "1.8.22"
+			kotlin("jvm") version "2.0.10"
 			kotlin("plugin.spring") version "1.8.22"
 			kotlin("plugin.jpa") version "1.8.22"
 			kotlin("kapt") version "1.8.22" // Corrected version
@@ -12,15 +13,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "com.hu.bme.aut"
 version = "0.0.1-SNAPSHOT"
 
-java {
-	sourceCompatibility = JavaVersion.VERSION_17
-}
-
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
 dependencies {
+	implementation ("com.aut.bme.chessAI:ChessAi:1.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.2")
 	implementation("org.springframework.boot:spring-boot-starter-web:3.3.2")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
@@ -45,13 +44,7 @@ dependencies {
 
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "17"
-	}
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 }
 
 kapt {
