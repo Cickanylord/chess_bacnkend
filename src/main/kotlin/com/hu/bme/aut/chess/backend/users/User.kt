@@ -22,10 +22,10 @@ class User {
     @OneToMany(mappedBy = "receiver", cascade = [CascadeType.ALL])
     private val messagesReceived: MutableList<Message> = ArrayList()
 
-    @OneToMany(mappedBy = "challenger", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "challenged", cascade = [CascadeType.ALL])
     private val challenger: MutableList<Match> = ArrayList()
 
-    @OneToMany(mappedBy = "challenged", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "challenger", cascade = [CascadeType.ALL])
     private val challenged: MutableList<Match> = ArrayList()
 
 

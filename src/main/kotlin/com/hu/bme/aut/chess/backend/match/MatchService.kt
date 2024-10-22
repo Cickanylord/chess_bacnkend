@@ -3,6 +3,7 @@ package com.hu.bme.aut.chess.backend.match
 
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
+import com.hu.bme.aut.chess.backend.users.User
 import com.hu.bme.aut.chess.backend.users.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -23,14 +24,18 @@ abstract class MatchService @Autowired constructor(
         return matchRepository.findById(id).get()
     }
 
-    fun saveMatch(matchReq: MatchRequestDTO): Match? {
-        val challenger = userService.findAuthenticatedUser()
+    fun saveMatch(matchReq: MatchRequestDTO, user: User? = null): Match? {
+        val challenger = userService.findAuthenticatedUser() ?: user
         val challenged = userService.findUserById(matchReq.challenged)
 
         if(challenged != challenger) {
             when {
                 challenger != null && challenged != null -> {
-                    val match = Match(challenger = challenger, challenged =  challenged)
+                    val match = Match(
+                        challenger = challenger,
+                        challenged =  challenged,
+                        board = matchReq.board
+                    )
                     return matchRepository.save(match)
                 }
             }
@@ -39,6 +44,8 @@ abstract class MatchService @Autowired constructor(
     }
 
     abstract fun updateMatch(step: StepRequest): Match?
+
+    abstract fun finedMatchesBetweenTwoPlayers(partnerId: Long) : List<Match>
 
     fun deleteMatch(id: Long) {
         matchRepository.deleteById(id)

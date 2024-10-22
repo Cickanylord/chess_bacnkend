@@ -5,7 +5,9 @@ import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Controller
 
+@Controller
 @RestController
 @RequestMapping("/api/messages")
 class MessageController @Autowired constructor(
@@ -20,7 +22,7 @@ class MessageController @Autowired constructor(
         fun getMessageByID(@PathVariable id: Long): ResponseEntity<MessageDTO> =
                 messageService.findMessageById(id).toMessageResponseEntity()
 
-        @PostMapping("/partner/{id}")
+        @GetMapping("/partner/{id}")
         fun getMessageBetweenUsers(@PathVariable id: Long): ResponseEntity<List<MessageDTO?>> =
                 ResponseEntity.ok(
                 messageService
@@ -43,21 +45,23 @@ class MessageController @Autowired constructor(
                 return ResponseEntity.ok("Message Deleted")
         }
 
-        fun Message?.toMessageResponse(): MessageDTO? {
-                return this?.let { message ->
-                        MessageDTO(
-                                message.getId()!!,
-                                message.getSender().getId()!!,
-                                message.getReceiver().getId()!!,
-                                message.getText(),
-                                message.getSentDate()
-                        )
-                }
-        }
-
         fun Message?.toMessageResponseEntity(): ResponseEntity<MessageDTO>  {
                 return this.toMessageResponse()?.let {
                         ResponseEntity.ok(it)
                 } ?: ResponseEntity.notFound().build()
         }
 }
+
+fun Message?.toMessageResponse(): MessageDTO? {
+        return this?.let { message ->
+                MessageDTO(
+                        message.getId()!!,
+                        message.getSender().getId()!!,
+                        message.getReceiver().getId()!!,
+                        message.getText(),
+                        message.getSentDate().toString()
+                )
+        }
+}
+
+

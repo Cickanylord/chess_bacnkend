@@ -1,9 +1,13 @@
 package com.hu.bme.aut.chess.backend.messages
 
+import com.google.gson.Gson
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import com.hu.bme.aut.chess.backend.users.User
 import com.hu.bme.aut.chess.backend.users.UserService
+import com.hu.bme.aut.chess.backend.webSocket.ChatEndPoint
+
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class MessageService @Autowired constructor(
     private val messageRepository: MessageRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val chatEndPoint: ChatEndPoint
 ) {
     fun findAllMessages(): List<Message> {
         return messageRepository.findAll()
@@ -32,12 +37,23 @@ class MessageService @Autowired constructor(
         user: User? = null
     ): Message? {
         val sender: User = userService.findAuthenticatedUser() ?: user!!
-        val receiver = userService.findUserById(messageRequestDTO.receiver_id)
+        val receiver = userService.findUserById(messageRequestDTO.receiverId)
 
         if (receiver != null && sender.getId() != receiver.getId()) {
             val message = Message(sender = sender, receiver = receiver, text = messageRequestDTO.text)
-            return messageRepository.save(message)
+            val savedMessage = messageRepository.save(message)
+
+            chatEndPoint.sendMessage(
+                message = Gson().toJson(savedMessage.toMessageResponse()),
+                listOfUserId = listOf(
+                    receiver.getId(),
+                    sender.getId(),
+                )
+            )
+
+            return savedMessage
         }
+
         return null
     }
 

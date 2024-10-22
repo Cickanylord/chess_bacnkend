@@ -52,7 +52,7 @@ class JwtAuthenticationFilter(
     }
 
     private fun String?.doesNotContainBearerToken(): Boolean {
-        return this == null || !this.contains("Bearer ")
+        return (this == null) || !this.contains("Bearer ")
     }
 
     private fun String.extractTokenValue(): String {

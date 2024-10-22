@@ -14,9 +14,9 @@ class Match(
 
         @ManyToOne
         private val challenged: User,
-) {
-        private var board: String = "rnbqkbnr/pp1ppp1p/8/2pP2p1/8/8/PPP1PPPP/RNBQKBNR w KQkq - 0 3"
 
+        private var board: String
+) {
         fun getMatchId(): Long? = matchId
 
         fun getChallenger(): User = challenger

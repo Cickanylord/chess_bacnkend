@@ -41,18 +41,22 @@ class SecurityConfig(
                 auth.requestMatchers("/api/messages/{id}").authenticated()
                 auth.requestMatchers("/api/chessMatch").permitAll()
                 auth.requestMatchers("/api/chessMatch/*").permitAll()
+                auth.requestMatchers("/api/chessMatch/getMatchesWithPartner/{id}").authenticated()
                 auth.requestMatchers("/api/auth").permitAll()
                 auth.requestMatchers("/api/user/me").permitAll()
                 auth.requestMatchers("/api/user/addFriend").authenticated()
                 auth.requestMatchers("/api/user/friends").authenticated()
                 auth.requestMatchers("/api/chess/ai/fen").permitAll()
                 auth.requestMatchers("/api/messages/partner/{id}").authenticated()
+                auth.requestMatchers("/chat/**").permitAll()
+                auth.requestMatchers("/**").permitAll()
             }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.NEVER) }
             .build()
     }
+
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {

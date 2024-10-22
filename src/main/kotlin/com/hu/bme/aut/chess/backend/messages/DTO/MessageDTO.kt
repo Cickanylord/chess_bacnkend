@@ -7,5 +7,5 @@ data class MessageDTO(
     val sender: Long,
     val receiver: Long,
     val text: String,
-    val sentDate: LocalDateTime
+    val sentDate: String
     )

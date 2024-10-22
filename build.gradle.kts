@@ -45,6 +45,9 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+	//websocket
+	implementation("org.springframework.boot:spring-boot-starter-websocket:3.1.12")
 }
 
 kapt {

@@ -25,16 +25,30 @@ abstract class MatchController @Autowired constructor(
 
     @GetMapping("/{id}")
     fun getMatch(@PathVariable id: Long): ResponseEntity<MatchResponseDTO> =
-        matchService.findMatchById(id).toMatchResponseEntity()
+        matchService
+            .findMatchById(id)
+            .toMatchResponseEntity()
 
+    @GetMapping("/getMatchesWithPartner/{partnerId}")
+    fun getMatchesWithPartner(@PathVariable partnerId: Long): ResponseEntity<List<MatchResponseDTO>> =
+        ResponseEntity
+            .ok(
+                matchService
+                .finedMatchesBetweenTwoPlayers(partnerId)
+                .map { it.toMatchResponseDTO()!! }
+            )
 
     @PostMapping
     fun addMatch(@RequestBody matchReq: MatchRequestDTO): ResponseEntity<MatchResponseDTO> =
-    matchService.saveMatch(matchReq).toMatchResponseEntity()
+    matchService
+        .saveMatch(matchReq)
+        .toMatchResponseEntity()
     
     @PutMapping("/step")
     fun step(@RequestBody step: StepRequest): ResponseEntity<MatchResponseDTO> =
-        matchService.updateMatch(step).toMatchResponseEntity()
+        matchService
+            .updateMatch(step)
+            .toMatchResponseEntity()
 
 
 
@@ -43,22 +57,21 @@ abstract class MatchController @Autowired constructor(
         matchService.deleteMatch(id)
         return ResponseEntity.ok("Match Deleted")
     }
+}
 
-
-    fun Match?.toMatchResponseDTO(): MatchResponseDTO? {
-        return this?.let { match ->
-            MatchResponseDTO(
-                match.getMatchId()!!,
-                match.getChallenger().getId()!!,
-                match.getChallenged().getId()!!,
-                match.getBoard()
-            )
-        }
+fun Match?.toMatchResponseDTO(): MatchResponseDTO? {
+    return this?.let { match ->
+        MatchResponseDTO(
+            match.getMatchId()!!,
+            match.getChallenger().getId()!!,
+            match.getChallenged().getId()!!,
+            match.getBoard()
+        )
     }
+}
 
-    fun Match?.toMatchResponseEntity(): ResponseEntity<MatchResponseDTO>  {
-        return this.toMatchResponseDTO()?.let {
-            ResponseEntity.ok(it)
-        } ?: ResponseEntity.notFound().build()
-    }
+fun Match?.toMatchResponseEntity(): ResponseEntity<MatchResponseDTO>  {
+    return this.toMatchResponseDTO()?.let {
+        ResponseEntity.ok(it)
+    } ?: ResponseEntity.notFound().build()
 }

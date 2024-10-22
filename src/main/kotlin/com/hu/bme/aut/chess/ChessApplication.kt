@@ -1,13 +1,16 @@
 package com.hu.bme.aut.chess
 
 
-import com.hu.bme.aut.chess.backend.messages.DTO.MessageDTO
+import com.hu.bme.aut.chess.backend.match.MatchService
+import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
 import com.hu.bme.aut.chess.backend.messages.DTO.MessageRequestDTO
 import com.hu.bme.aut.chess.backend.messages.MessageService
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import com.hu.bme.aut.chess.backend.users.UserService
 import com.hu.bme.aut.chess.backend.users.UserRole
+import com.hu.bme.aut.chess.games.chess.match.ChessMatchService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -21,7 +24,8 @@ class ChessApplication(
 	private val userService: UserService,
 
 	@Autowired
-	private val messageService: MessageService
+	private val messageService: MessageService,
+	private val chessMatchService: ChessMatchService
 ) : CommandLineRunner {
 
 	@Throws(java.lang.Exception::class)
@@ -30,13 +34,12 @@ class ChessApplication(
 		val admin = UserRequestDTO(name = "admin", password = "demo")
 		users.add(admin)
 
-		val names = arrayOf("Bob", "Alice", "George", "Emily", "Jack", "Lily", "Michael", "Sophia", "Karen", "Olivia")
+		val names = arrayOf("Bob", "Alice", "George", "Emily", "Ethan", "Lily", "Michael", "Sophia", "Karen", "Olivia")
 		for (name in names) {
 			UserRequestDTO(name = name, password = "demo").let { users.add(it) }
 		}
 		val savedUsers = users
-			.map {userService.saveUser(it)
-			}
+			.map {userService.saveUser(it) }
 
 
 		gibberishMessages
@@ -45,7 +48,7 @@ class ChessApplication(
 				messageService.saveMessage(
 					user = savedUsers[1],
 					messageRequestDTO = MessageRequestDTO(
-						receiver_id = 4,
+						receiverId = 4,
 						text = it
 					)
 				)
@@ -57,12 +60,26 @@ class ChessApplication(
 				messageService.saveMessage(
 					user = savedUsers[3],
 					messageRequestDTO = MessageRequestDTO(
-						receiver_id = 2,
+						receiverId = 2,
 						text = it
 					)
 				)
 			}
 
+		userService.addFriend(savedUsers[1].getId()!!, savedUsers[3])
+		userService.addFriend(savedUsers[1].getId()!!, savedUsers[4])
+		userService.addFriend(savedUsers[1].getId()!!, savedUsers[5])
+		userService.addFriend(savedUsers[1].getId()!!, savedUsers[6])
+
+		for (i in 0..100) {
+			chessMatchService.saveMatch(
+				MatchRequestDTO(
+					challenged = 6,
+					board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+				),
+				savedUsers[1]
+			)
+		}
 		userService.grantAuthority(1L, UserRole.ADMIN)
 	}
 }
@@ -71,7 +88,9 @@ fun main(args: Array<String>) {
 }
 
 private val gibberishMessages = mutableListOf(
-	"Zaluf mekto polo!",
+	"Zaluf mekto polo! Zaluf mekto polo! Zaluf mekto polo! Zaluf mekto polo! Zaluf mekto polo! Zaluf mekto polo! Zaluf mekto polo!" +
+			"Zaluf mekto polo!" +
+			"Zaluf mekto polo!",
 	"Wibble wobble floop!",
 	"Flim flam goo!",
 	"Glip glop zibbity!",

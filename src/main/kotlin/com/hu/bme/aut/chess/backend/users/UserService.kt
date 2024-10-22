@@ -3,6 +3,7 @@ package com.hu.bme.aut.chess.backend.users
 import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsImpl
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -61,14 +62,17 @@ class UserService @Autowired constructor(
         } ?: return null
     }
 
-    fun addFriend(friendId: Long): User? {
-        val user = findAuthenticatedUser()
-        findUserById(friendId)?.let {friend ->
-            if (friend != user) {
-                friend.getFriendList().add(user!!)
-                user.getFriendList().add(friend)
+    fun addFriend(
+        friendId: Long,
+        user: User? = null,
+    ): User? {
+        val sender = findAuthenticatedUser() ?: user
+        findUserById(friendId)?.let { friend ->
+            if (friend != sender) {
+                friend.getFriendList().add(sender!!)
+                sender.getFriendList().add(friend)
                 saveUser(friend)
-                return saveUser(user)
+                return saveUser(sender)
             }
         }
         return null
