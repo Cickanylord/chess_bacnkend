@@ -37,9 +37,6 @@ class UserController @Autowired constructor(
             }
         )
 
-
-
-
     @PostMapping
     fun addUser(@RequestBody userRequestDTO: UserRequestDTO): ResponseEntity<UserResponseDTO> =
         userService.saveUser(userRequestDTO).toUserResponseEntity()
@@ -66,7 +63,9 @@ class UserController @Autowired constructor(
                 user.getMessagesReceived().map { it.getId()!! },
                 user.getChallenged().map {  it.getMatchId()!! },
                 user.getChallenger().map {  it.getMatchId()!! },
-                user.getFriendList().map {  it.getId()!! }
+                user.getFriendList().map {  it.getId()!! },
+                user.getMatchesWined().map {  it.getMatchId()!! },
+                user.getMatchesLost().map {  it.getMatchId()!! },
             )
         }
     }

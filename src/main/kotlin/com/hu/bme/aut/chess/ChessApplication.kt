@@ -80,6 +80,7 @@ class ChessApplication(
 				savedUsers[1]
 			)
 		}
+		chessMatchService.finishMatch(1,savedUsers[1], savedUsers[5])
 		userService.grantAuthority(1L, UserRole.ADMIN)
 	}
 }

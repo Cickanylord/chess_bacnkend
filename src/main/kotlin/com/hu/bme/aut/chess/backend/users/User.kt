@@ -28,7 +28,11 @@ class User {
     @OneToMany(mappedBy = "challenger", cascade = [CascadeType.ALL])
     private val challenged: MutableList<Match> = ArrayList()
 
+    @OneToMany(mappedBy = "winner", cascade = [CascadeType.ALL])
+    private val matchesWined: MutableList<Match> = ArrayList()
 
+    @OneToMany(mappedBy = "loser", cascade = [CascadeType.ALL])
+    private val matchesLost: MutableList<Match> = ArrayList()
 
     @ElementCollection(fetch = FetchType.EAGER)
     private val roles: MutableSet<UserRole> = mutableSetOf(UserRole.GUEST)
@@ -69,6 +73,8 @@ class User {
     fun setRoles(userRole: UserRole) {
         this.roles.add(userRole)
     }
+    fun getMatchesWined(): List<Match> = matchesWined
+    fun getMatchesLost(): List<Match> = matchesLost
 
     fun getFriendList(): MutableSet<User> = friendList
 

@@ -43,6 +43,17 @@ abstract class MatchService @Autowired constructor(
         return null
     }
 
+    fun finishMatch(matchId: Long, winner: User, loser: User): Match? {
+        findMatchById(matchId)?.let { match ->
+            val players = match.getPlayers()
+            if (players.containsAll(listOf(winner, loser)) && match.getIsGoing()) {
+                match.finishMatch(winner, loser)
+                return matchRepository.save(match)
+            }
+        }
+        return null
+    }
+
     abstract fun updateMatch(step: StepRequest): Match?
 
     abstract fun finedMatchesBetweenTwoPlayers(partnerId: Long) : List<Match>

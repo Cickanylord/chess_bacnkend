@@ -12,4 +12,6 @@ data class UserResponseDTO(
     val challenger: List<Long>,
     val challenged: List<Long>,
     val friendList: List<Long>,
+    val matchesWined: List<Long>,
+    val matchesLost: List<Long>,
     )
