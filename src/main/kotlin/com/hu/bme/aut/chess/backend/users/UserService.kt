@@ -21,7 +21,7 @@ class UserService @Autowired constructor(
     }
 
     fun findUserById(id: Long): User? {
-        return userRepository.findById(id).get()
+        return userRepository.findById(id).orElse(null)
     }
 
     fun findUserByName(name: String): User? {

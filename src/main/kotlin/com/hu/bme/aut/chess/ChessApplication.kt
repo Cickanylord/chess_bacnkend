@@ -71,7 +71,7 @@ class ChessApplication(
 		userService.addFriend(savedUsers[1].getId()!!, savedUsers[5])
 		userService.addFriend(savedUsers[1].getId()!!, savedUsers[6])
 
-		for (i in 0..100) {
+		for (i in 0..5) {
 			chessMatchService.saveMatch(
 				MatchRequestDTO(
 					challenged = 6,

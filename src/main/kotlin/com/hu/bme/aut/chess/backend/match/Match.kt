@@ -55,6 +55,9 @@ class Match(
 
         fun getPlayers(): List<User> = listOf(challenged, challenger)
 
+        fun getWinner() = winner
+        fun getLoser() = loser
+
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (javaClass != other?.javaClass) return false

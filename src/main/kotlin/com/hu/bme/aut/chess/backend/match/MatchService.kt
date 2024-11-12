@@ -21,7 +21,7 @@ abstract class MatchService @Autowired constructor(
     }
 
     fun findMatchById(id: Long): Match? {
-        return matchRepository.findById(id).get()
+        return matchRepository.findById(id).orElse(null)
     }
 
     fun saveMatch(matchReq: MatchRequestDTO, user: User? = null): Match? {

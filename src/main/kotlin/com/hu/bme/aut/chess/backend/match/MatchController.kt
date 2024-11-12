@@ -2,7 +2,6 @@ package com.hu.bme.aut.chess.backend.match
 
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTO
-import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchResponseDTOMapper
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
 import com.hu.bme.aut.chess.backend.users.User
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserResponseDTO
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/matches")
 abstract class MatchController @Autowired constructor(
     private val matchService: MatchService,
-){
+) {
     @GetMapping
     fun getMatches(): ResponseEntity<List<MatchResponseDTO>> =
         ResponseEntity
@@ -65,7 +64,10 @@ fun Match?.toMatchResponseDTO(): MatchResponseDTO? {
             match.getMatchId()!!,
             match.getChallenger().getId()!!,
             match.getChallenged().getId()!!,
-            match.getBoard()
+            match.getBoard(),
+            match.getIsGoing(),
+            match.getWinner()?.getId(),
+            match.getLoser()?.getId()
         )
     }
 }
