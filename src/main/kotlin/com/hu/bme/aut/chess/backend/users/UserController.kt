@@ -53,26 +53,27 @@ class UserController @Autowired constructor(
         return ResponseEntity.ok().build()
     }
 
-    fun User?.toUserResponseDTO(): UserResponseDTO? {
-        return this?.let { user ->
-            UserResponseDTO(
-                user.getId()!!,
-                user.getName(),
-                user.getRoles(),
-                user.getMessagesSent().map { it.getId()!! },
-                user.getMessagesReceived().map { it.getId()!! },
-                user.getChallenged().map {  it.getMatchId()!! },
-                user.getChallenger().map {  it.getMatchId()!! },
-                user.getFriendList().map {  it.getId()!! },
-                user.getMatchesWined().map {  it.getMatchId()!! },
-                user.getMatchesLost().map {  it.getMatchId()!! },
-            )
-        }
-    }
 
     fun User?.toUserResponseEntity(): ResponseEntity<UserResponseDTO>  {
         return this.toUserResponseDTO()?.let {
             ResponseEntity.ok(it)
         } ?: ResponseEntity.notFound().build()
+    }
+}
+
+fun User?.toUserResponseDTO(): UserResponseDTO? {
+    return this?.let { user ->
+        UserResponseDTO(
+            user.getId()!!,
+            user.getName(),
+            user.getRoles(),
+            user.getMessagesSent().map { it.getId()!! },
+            user.getMessagesReceived().map { it.getId()!! },
+            user.getChallenged().map {  it.getMatchId()!! },
+            user.getChallenger().map {  it.getMatchId()!! },
+            user.getFriendList().map {  it.getId()!! },
+            user.getMatchesWined().map {  it.getMatchId()!! },
+            user.getMatchesLost().map {  it.getMatchId()!! },
+        )
     }
 }
