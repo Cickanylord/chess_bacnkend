@@ -2,6 +2,7 @@ package com.hu.bme.aut.chess.backend.users
 
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.messages.Message
+import com.hu.bme.aut.chess.backend.users.profilePicture.ProfilePictureEntity
 import jakarta.persistence.*
 
 
@@ -45,6 +46,8 @@ class User {
     )
     private val friendList: MutableSet<User> = mutableSetOf()
 
+    @OneToOne(cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    private var profilePicture: ProfilePictureEntity? = null
 
     fun getId(): Long? = id
 
@@ -77,6 +80,11 @@ class User {
     fun getMatchesLost(): List<Match> = matchesLost
 
     fun getFriendList(): MutableSet<User> = friendList
+
+    fun getProfilePicture(): ProfilePictureEntity? = profilePicture
+    fun setProfilePicture(profilePicture: ProfilePictureEntity?) {
+        this.profilePicture = profilePicture
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

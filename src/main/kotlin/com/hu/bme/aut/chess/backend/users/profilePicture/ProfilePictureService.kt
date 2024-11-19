@@ -18,13 +18,28 @@ class ProfilePictureService @Autowired constructor(
         return profilePictureRepository.findById(id).orElse(null)
     }
 
+    @Transactional
     fun saveProfilePicture(bytes: ByteArray): ProfilePictureEntity {
-        val profilePic = ProfilePictureEntity()
+        var profilePic = ProfilePictureEntity()
+        val owner = userService.findAuthenticatedUser()!!
 
-        profilePic.setOwner(userService.findAuthenticatedUser()!!)
+
+        owner.getProfilePicture()?.let { oldProfilePic ->
+            oldProfilePic.setContent(bytes)
+            return profilePictureRepository.save(oldProfilePic)
+        }
+
+
+        //set new
+        profilePic.setOwner(owner)
         profilePic.setContent(bytes)
 
-        return profilePictureRepository.save(profilePic)
+
+        profilePic = profilePictureRepository.save(profilePic)
+        owner.setProfilePicture(profilePic)
+        userService.saveUser(owner)
+
+        return profilePic
     }
 
 

@@ -74,6 +74,7 @@ fun User?.toUserResponseDTO(): UserResponseDTO? {
             user.getFriendList().map {  it.getId()!! },
             user.getMatchesWined().map {  it.getMatchId()!! },
             user.getMatchesLost().map {  it.getMatchId()!! },
+            user.getProfilePicture()?.getContent()
         )
     }
 }

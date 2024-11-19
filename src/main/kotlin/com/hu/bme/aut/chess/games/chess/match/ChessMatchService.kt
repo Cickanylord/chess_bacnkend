@@ -2,7 +2,10 @@ package com.hu.bme.aut.chess.games.chess.match
 
 import ai_engine.board.BoardData
 import ai_engine.board.BoardLogic
+import ai_engine.board.pieces.PieceFactory
+import ai_engine.board.pieces.Queen
 import ai_engine.board.pieces.enums.PieceColor
+import ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.match.MatchRepository
 import com.hu.bme.aut.chess.backend.match.MatchService
@@ -75,9 +78,11 @@ class ChessMatchService @Autowired constructor(
 
     private fun isMoveValid(match: Match, user: User, board: BoardData, step: StepRequest): Boolean {
         val possibleFens = board.boardLogic.getPossibleFENs()
+        println(possibleFens)
         val isUserTurn = (user == match.getChallenger() && board.activeColor == PieceColor.WHITE) ||
                 (user == match.getChallenged() && board.activeColor == PieceColor.BLACK)
-        return isUserTurn && possibleFens.contains(step.board)
+        return possibleFens.contains(step.board)
+        //return isUserTurn && possibleFens.contains(step.board)
     }
 
     override fun finedMatchesBetweenTwoPlayers(partnerId: Long): List<Match> {
@@ -100,6 +105,22 @@ class ChessMatchService @Autowired constructor(
                 val tmpBoard = BoardLogic(BoardData(board.toString()))
 
                 tmpBoard.move(tmpBoard.board.getPiece(piece.position), move)
+
+                val row = if(tmpBoard.board.activeColor == PieceColor.WHITE) 7 else 0
+
+                if ( tmpBoard.board.board[row].any{ it.piece?.name == PieceName.PAWN }) {
+                    val pawn = tmpBoard.board.board[row].find { it.piece?.name == PieceName.PAWN }?.piece!!
+
+                    val promotionOptions = listOf(PieceName.QUEEN, PieceName.ROOK, PieceName.BISHOP, PieceName.KNIGHT)
+
+                    for (option in promotionOptions) {
+                        tmpBoard.board.addPiece(
+                            PieceFactory.makePiece(option, pawn.pieceColor, pawn.position)
+                        )
+                        fenList.add(tmpBoard.board.toString())
+                    }
+                }
+
                 fenList.add(tmpBoard.board.toString())
             }
         }
