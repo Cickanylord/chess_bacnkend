@@ -2,13 +2,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
-			id("org.springframework.boot") version "3.1.5"
-			id("io.spring.dependency-management") version "1.1.3"
-			kotlin("jvm") version "2.0.10"
-			kotlin("plugin.spring") version "1.8.22"
-			kotlin("plugin.jpa") version "1.8.22"
-			kotlin("kapt") version "1.8.22" // Corrected version
-		}
+	id("org.springframework.boot") version "3.1.5"
+	id("io.spring.dependency-management") version "1.1.3"
+	kotlin("jvm") version "2.0.10"
+	kotlin("plugin.spring") version "1.8.22"
+	kotlin("plugin.jpa") version "1.8.22"
+	kotlin("kapt") version "1.8.22"
+	jacoco
+	id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
+	id("org.sonarqube") version "4.2.1.3168"
+	id("com.github.bjornvester.xjc") version "1.8.2"
+	id("com.google.cloud.tools.jib") version "3.3.2"
+
+}
 
 group = "com.hu.bme.aut"
 version = "0.0.1-SNAPSHOT"

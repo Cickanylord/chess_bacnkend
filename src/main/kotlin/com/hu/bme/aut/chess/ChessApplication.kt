@@ -8,6 +8,7 @@ import com.hu.bme.aut.chess.backend.messages.MessageService
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import com.hu.bme.aut.chess.backend.users.UserService
 import com.hu.bme.aut.chess.backend.users.UserRole
+import com.hu.bme.aut.chess.backend.webSocket.MatchEndPoint
 import com.hu.bme.aut.chess.games.chess.match.ChessMatchService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -25,7 +26,8 @@ class ChessApplication(
 
 	@Autowired
 	private val messageService: MessageService,
-	private val chessMatchService: ChessMatchService
+	private val chessMatchService: ChessMatchService,
+	private val matchEndPoint: MatchEndPoint
 ) : CommandLineRunner {
 
 	@Throws(java.lang.Exception::class)
@@ -66,10 +68,10 @@ class ChessApplication(
 				)
 			}
 
-		userService.addFriend(savedUsers[1].getId()!!, savedUsers[3])
-		userService.addFriend(savedUsers[1].getId()!!, savedUsers[4])
-		userService.addFriend(savedUsers[1].getId()!!, savedUsers[5])
-		userService.addFriend(savedUsers[1].getId()!!, savedUsers[6])
+		userService.addFriend(savedUsers[1]?.getId()!!, savedUsers[3])
+		userService.addFriend(savedUsers[1]?.getId()!!, savedUsers[4])
+		userService.addFriend(savedUsers[1]?.getId()!!, savedUsers[5])
+		userService.addFriend(savedUsers[1]?.getId()!!, savedUsers[6])
 
 		for (i in 0..5) {
 			chessMatchService.saveMatch(
@@ -80,7 +82,7 @@ class ChessApplication(
 				savedUsers[1]
 			)
 		}
-		chessMatchService.finishMatch(1,savedUsers[1], savedUsers[5])
+		chessMatchService.finishMatch(1, savedUsers[1]!!, savedUsers[5]!!)
 		userService.grantAuthority(1L, UserRole.ADMIN)
 	}
 }

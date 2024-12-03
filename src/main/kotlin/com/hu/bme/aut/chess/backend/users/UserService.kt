@@ -3,7 +3,6 @@ package com.hu.bme.aut.chess.backend.users
 import com.hu.bme.aut.chess.backend.security.userDetails.UserDetailsImpl
 import com.hu.bme.aut.chess.backend.users.dataTransferObject.UserRequestDTO
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -38,7 +37,8 @@ class UserService @Autowired constructor(
     }
 
 
-    fun saveUser(userRequestDTO: UserRequestDTO): User {
+    fun saveUser(userRequestDTO: UserRequestDTO): User? {
+        if (userRepository.findUserByName(userRequestDTO.name) != null) return null
         val user = User()
         user.setPassword (
             passwordEncoder.encode (
@@ -56,8 +56,9 @@ class UserService @Autowired constructor(
     }
 
     fun grantAuthority(id: Long,role: UserRole): User? {
-        findUserById(1)?.let {
+        findUserById(id)?.let {
             it.getRoles().add(role)
+            saveUser(it)
             return it
         } ?: return null
     }
@@ -82,8 +83,15 @@ class UserService @Autowired constructor(
         return user?.getFriendList()!!.toList()
     }
 
+    /**
+     * This function deletes user by their id.
+     * @param id the users id that shall be deleted
+     *
+     * This function is not tested!!!
+     */
     fun deleteUser(id: Long) {
         val user = findUserById(id) ?: return
+
         val friendIds = user
             .getFriendList()
             .map { it.getId() }

@@ -1,11 +1,10 @@
 package com.hu.bme.aut.chess.games.chess.match
 
 import ai_engine.board.BoardData
-import ai_engine.board.BoardLogic
-import ai_engine.board.pieces.PieceFactory
-import ai_engine.board.pieces.Queen
+import ai_engine.board.BoardValidator
+import ai_engine.board.BoardValidator.getPossibleFENs
+import ai_engine.board.BoardValidator.isMoveValid
 import ai_engine.board.pieces.enums.PieceColor
-import ai_engine.board.pieces.enums.PieceName
 import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.match.MatchRepository
 import com.hu.bme.aut.chess.backend.match.MatchService
@@ -21,7 +20,7 @@ class ChessMatchService @Autowired constructor(
     private val matchRepository: MatchRepository,
     private val userService: UserService,
     private val matchEndPoint: MatchEndPoint
-) : MatchService(matchRepository, userService) {
+) : MatchService(matchRepository, userService, matchEndPoint) {
 
     /**
      * This function is responsible for updating the chess games.
@@ -41,15 +40,14 @@ class ChessMatchService @Autowired constructor(
         // Check if the authenticated user is a participant in the match
         if (authenticatedUser == match.getChallenged() || authenticatedUser == match.getChallenger()) {
             val prevBoard = BoardData(match.getBoard())
-            val possibleFens = prevBoard.boardLogic.getPossibleFENs()
             // Verify if the new board state is valid
-            if (isMoveValid(match, authenticatedUser, prevBoard, step)) {
+            if (isOnlineMoveValid(match, authenticatedUser, prevBoard, step)) {
                 // Update the match's board to the new state
                 match.setBoard(step.board)
                 val nextBoard = BoardData(step.board)
 
                 // Check if the game has reached a finishing state (no possible moves)
-                if (nextBoard.boardLogic.getPossibleFENs().isEmpty()) {
+                if (getPossibleFENs(nextBoard).isEmpty()) {
                     // Determine the winner based on the active color
                     val winner = if (nextBoard.activeColor == PieceColor.BLACK) {
                         match.getChallenger()
@@ -76,13 +74,10 @@ class ChessMatchService @Autowired constructor(
         return null
     }
 
-    private fun isMoveValid(match: Match, user: User, board: BoardData, step: StepRequest): Boolean {
-        val possibleFens = board.boardLogic.getPossibleFENs()
-        println(possibleFens)
+    private fun isOnlineMoveValid(match: Match, user: User, board: BoardData, step: StepRequest): Boolean {
         val isUserTurn = (user == match.getChallenger() && board.activeColor == PieceColor.WHITE) ||
                 (user == match.getChallenged() && board.activeColor == PieceColor.BLACK)
-        return possibleFens.contains(step.board)
-        //return isUserTurn && possibleFens.contains(step.board)
+        return isMoveValid(board, step.board) //&& isUserTurn
     }
 
     override fun finedMatchesBetweenTwoPlayers(partnerId: Long): List<Match> {
@@ -92,38 +87,5 @@ class ChessMatchService @Autowired constructor(
                 match.getChallenged().getId() == partnerId ||
                 match.getChallenger().getId() == partnerId
             }
-    }
-
-    fun BoardLogic.getPossibleFENs(): List<String> {
-        val fenList = mutableListOf<String>()
-        val pieces = board.getPiecesByColor(board.activeColor)
-
-        for (piece in pieces) {
-            val legalMoves = getLegalMoves(piece)
-
-            for (move in legalMoves) {
-                val tmpBoard = BoardLogic(BoardData(board.toString()))
-
-                tmpBoard.move(tmpBoard.board.getPiece(piece.position), move)
-
-                val row = if(tmpBoard.board.activeColor == PieceColor.WHITE) 7 else 0
-
-                if ( tmpBoard.board.board[row].any{ it.piece?.name == PieceName.PAWN }) {
-                    val pawn = tmpBoard.board.board[row].find { it.piece?.name == PieceName.PAWN }?.piece!!
-
-                    val promotionOptions = listOf(PieceName.QUEEN, PieceName.ROOK, PieceName.BISHOP, PieceName.KNIGHT)
-
-                    for (option in promotionOptions) {
-                        tmpBoard.board.addPiece(
-                            PieceFactory.makePiece(option, pawn.pieceColor, pawn.position)
-                        )
-                        fenList.add(tmpBoard.board.toString())
-                    }
-                }
-
-                fenList.add(tmpBoard.board.toString())
-            }
-        }
-        return fenList
     }
 }

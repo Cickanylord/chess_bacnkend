@@ -16,8 +16,6 @@ class ChessApplicationTests @Autowired constructor(
     private val matchRepository: MatchRepository,
     private val messageRepository: MessageRepository
 ){
-    @Mock
-    private val userService
 
 	/*
 	lateinit var user: User

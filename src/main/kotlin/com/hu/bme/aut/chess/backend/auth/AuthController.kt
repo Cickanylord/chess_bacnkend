@@ -16,24 +16,10 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/api/auth")
 class AuthController (
     private val authenticationService: AuthenticationService,
-    private val emailService: EmailService
 ){
 
     @PostMapping
     fun authenticate(@RequestBody authRequest: AuthenticationRequestDTO): ResponseEntity<AuthenticationResponseDTO> {
-        //emailService.sendSimpleMailMessage("tomifoka@hotmail.com", "test", "BAH")
         return ResponseEntity.ok(authenticationService.authentication(authRequest))
     }
-
-    /*
-    @PostMapping("/refresh")
-    fun refresh(@RequestBody request: RefereshAccessTokenRequest): ResponseEntity<AuthenticationResponseDTO> {
-        authenticationService.refreshAccessToken(request.token)
-            ?.mapToTokenResponse()
-            ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, )
-        return ResponseEntity.ok(authenticationService.authentication(authRequest))
-    }
-
-     */
-
 }

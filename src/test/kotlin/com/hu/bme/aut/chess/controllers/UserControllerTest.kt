@@ -17,10 +17,6 @@ class UserControllerTest @Autowired constructor (
 
     @Mock
     private val userRepository: UserRepository,
-
-    @Mock
-    private val userResponseDTOMapper: UserResponseDTOMapper
-
 )
 
 

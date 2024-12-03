@@ -1,16 +1,17 @@
 package com.hu.bme.aut.chess
 
 
-import com.hu.bme.aut.chess.Util.CastlingRights
-import com.hu.bme.aut.chess.ai_engine.board.BoardData
-import com.hu.bme.aut.chess.ai_engine.board.BoardLogic
-import com.hu.bme.aut.chess.ai_engine.board.pieces.enums.PieceColor
 
+
+import ai_engine.board.BoardData
+import ai_engine.board.BoardLogic
+import ai_engine.board.pieces.enums.PieceColor
+import ai_engine.util.CastlingRights
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BoardTest {
     lateinit var boardData: BoardData
@@ -39,10 +40,10 @@ class BoardTest {
     @Test
     fun fenInit() {
         //keeps all the castling rights
-        assert(BoardData(newBoardFen).fen.toString() == newBoardFen)
+        assert(BoardData(newBoardFen).toString() == newBoardFen)
 
         //only white has castlingRight
-        assert(BoardData(whiteKingHasCastlingRightFen).fen.toString() == whiteKingHasCastlingRightFen)
+        assert(BoardData(whiteKingHasCastlingRightFen).toString() == whiteKingHasCastlingRightFen)
 
         //only black has castlingRight
 
@@ -80,13 +81,13 @@ class BoardTest {
 
     @Test
     fun writingCastling() {
-        assert( BoardData(noCastlingFen).fen.toString() == noCastlingFen)
+        assert( BoardData(noCastlingFen).toString() == noCastlingFen)
         //white has castling
-        assert( BoardData(whiteKingHasCastlingRightFen).fen.toString() == whiteKingHasCastlingRightFen)
+        assert( BoardData(whiteKingHasCastlingRightFen).toString() == whiteKingHasCastlingRightFen)
         //black has castling
-        assert( BoardData(blackKingHasCastlingRightFen).fen.toString() == blackKingHasCastlingRightFen)
+        assert( BoardData(blackKingHasCastlingRightFen).toString() == blackKingHasCastlingRightFen)
         //every player has castling
-        assert( BoardData(newBoardFen).fen.toString() == newBoardFen)
+        assert( BoardData(newBoardFen).toString() == newBoardFen)
     }
 
     /**
@@ -158,8 +159,8 @@ class BoardTest {
     @Test
     fun whiteQueenSideCastling() {
         BoardLogic(BoardData(whiteKingHasCastlingRightFen)).let {
-            val king = it.board.getPiece(Pair(7, 4))
-            val queenSideRook = it.board.getPiece(Pair(7, 0))
+            val king = it.board.getPiece(Pair(7, 4))!!
+            val queenSideRook = it.board.getPiece(Pair(7, 0))!!
 
 
             it.move(it.board.getPiece(7,4)!!, Pair(7, 2))
@@ -176,8 +177,8 @@ class BoardTest {
     @Test
     fun whiteKingSideCastling() {
         BoardLogic(BoardData(whiteKingHasCastlingRightFen)).let {
-            val king = it.board.getPiece(Pair(7, 4))
-            val kingSideRook = it.board.getPiece(Pair(7, 7))
+            val king = it.board.getPiece(Pair(7, 4))!!
+            val kingSideRook = it.board.getPiece(Pair(7, 7))!!
 
 
             it.move(it.board.getPiece(7,4)!!, Pair(7, 6))

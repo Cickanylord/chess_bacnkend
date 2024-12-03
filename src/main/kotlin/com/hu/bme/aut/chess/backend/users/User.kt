@@ -4,14 +4,19 @@ import com.hu.bme.aut.chess.backend.match.Match
 import com.hu.bme.aut.chess.backend.messages.Message
 import com.hu.bme.aut.chess.backend.users.profilePicture.ProfilePictureEntity
 import jakarta.persistence.*
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.NoArgsConstructor
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
-class User {
+class User() {
     @Id
     @GeneratedValue
-    private val id: Long?=null
+    private var id: Long? = null
 
     private lateinit var name: String
 
@@ -49,6 +54,11 @@ class User {
     @OneToOne(cascade = [(CascadeType.ALL)], orphanRemoval = true)
     private var profilePicture: ProfilePictureEntity? = null
 
+    fun setId(id: Long) {
+        if (this.id == null) {
+            this.id = id
+        }
+    }
     fun getId(): Long? = id
 
     fun getName(): String = name

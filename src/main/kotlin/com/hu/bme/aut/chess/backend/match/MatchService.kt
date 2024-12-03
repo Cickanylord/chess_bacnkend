@@ -5,6 +5,7 @@ import com.hu.bme.aut.chess.backend.match.dataTransferObject.MatchRequestDTO
 import com.hu.bme.aut.chess.backend.match.dataTransferObject.StepRequest
 import com.hu.bme.aut.chess.backend.users.User
 import com.hu.bme.aut.chess.backend.users.UserService
+import com.hu.bme.aut.chess.backend.webSocket.MatchEndPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 abstract class MatchService @Autowired constructor(
     private val matchRepository: MatchRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val matchEndPoint: MatchEndPoint
 ) {
     fun findAllMatches(): List<Match> {
         return matchRepository.findAll()
@@ -36,7 +38,12 @@ abstract class MatchService @Autowired constructor(
                         challenged =  challenged,
                         board = matchReq.board
                     )
-                    return matchRepository.save(match)
+                    val savedMatch = matchRepository.save(match)
+                    matchEndPoint.sendMessage(
+                        savedMatch,
+                        listOf(challenger.getId(), challenged.getId())
+                    )
+                    return savedMatch
                 }
             }
         }
